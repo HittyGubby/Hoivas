@@ -1,0 +1,47 @@
+@font-face {
+  font-family: FZRui;
+  src: url(/fonts/FZRuiZHJW.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: Cubic;
+  src: url(/fonts/Cubic.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: electrolize;
+  src: url(/fonts/electrolize.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: kenyan;
+  src: url(/fonts/kenyancoffee.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: huangyouti;
+  src: url(/fonts/huangyouti.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: OldTypeNr;
+  src: url(/fonts/OldTyperNr.woff2) format("woff2");
+}
+
+* {
+  cursor: url(/template/embark.png), auto;
+}
+
+main {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  left: 0;
+}
+
+input {
+  accent-color: var(--theme-color);
+}
