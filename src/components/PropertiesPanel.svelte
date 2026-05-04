@@ -6,7 +6,7 @@
   import Modal from "./Modal.svelte";
   import { Type, ImageIcon, PieChart as PieIcon, Settings, Trash2, Maximize } from "lucide-svelte";
 
-  let { node, onDelete } = $props();
+  let { node, onDelete, focusEdges = [], onDeleteEdge = undefined } = $props();
 
   // Helper for direct binding to nested data
   let data = $derived(node.data);
@@ -232,6 +232,81 @@
     <div class="section">
       <button class="editor-trigger" onclick={() => (showChartEditor = true)}>配置独立饼图</button>
     </div>
+  {:else if node.type === "focus"}
+    <div class="section">
+      <label>国策名称</label>
+      <div class="input-group">
+        <input type="text" bind:value={data.label} class="styled-input" />
+        <button class="rich-trigger" onclick={() => openRichText("label", "编辑国策名称")}>+</button>
+      </div>
+    </div>
+    <div class="section">
+      <button class="editor-trigger secondary" onclick={() => openPicManager("focus", "icon")}>更换图标</button>
+    </div>
+    <div class="section">
+      <label>状态</label>
+      <select bind:value={data.status} class="styled-input">
+        <option value="completed">已完成</option>
+        <option value="inProgress">进行中</option>
+        <option value="unavailable">不可用</option>
+      </select>
+    </div>
+    {#if focusEdges.length > 0}
+      {@const nodeEdges = focusEdges.filter((e: any) => e.source === node.id || e.target === node.id)}
+      {@const topEdges = nodeEdges.filter((e: any) => (e.source === node.id && e.sourceHandle === "top") || (e.target === node.id && e.targetHandle === "top"))}
+      {@const bottomEdges = nodeEdges.filter((e: any) => (e.source === node.id && e.sourceHandle === "bottom") || (e.target === node.id && e.targetHandle === "bottom"))}
+      {@const leftEdges = nodeEdges.filter((e: any) => (e.source === node.id && e.sourceHandle === "left") || (e.target === node.id && e.targetHandle === "left"))}
+      {@const rightEdges = nodeEdges.filter((e: any) => (e.source === node.id && e.sourceHandle === "right") || (e.target === node.id && e.targetHandle === "right"))}
+      <div class="edge-section">
+        <span class="edge-title">连线</span>
+        {#each [{ handle: "上", edges: topEdges }, { handle: "下", edges: bottomEdges }, { handle: "左", edges: leftEdges }, { handle: "右", edges: rightEdges }] as group}
+          {#if group.edges.length > 0}
+            <div class="handle-group">
+              <span class="handle-label">{group.handle}</span>
+              {#each group.edges as edge}
+                {@const edgeData = edge.data ?? { dashed: false, exclusive: false, completed: false }}
+                <div class="edge-item">
+                  <select
+                    value={edgeData.dashed ? "true" : "false"}
+                    onchange={(e) => {
+                      if (!edge.data) edge.data = { dashed: false, exclusive: false, completed: false };
+                      edge.data.dashed = e.currentTarget.value === "true";
+                    }}
+                    class="edge-style-select"
+                  >
+                    <option value="false">实线</option>
+                    <option value="true">虚线</option>
+                  </select>
+                  <label class="checkbox-label compact">
+                    <input
+                      type="checkbox"
+                      checked={edgeData.exclusive}
+                      onchange={(e) => {
+                        if (!edge.data) edge.data = { dashed: false, exclusive: false, completed: false };
+                        edge.data.exclusive = e.currentTarget.checked;
+                      }}
+                    />
+                    互斥
+                  </label>
+                  <label class="checkbox-label compact">
+                    <input
+                      type="checkbox"
+                      checked={edgeData.completed}
+                      onchange={(e) => {
+                        if (!edge.data) edge.data = { dashed: false, exclusive: false, completed: false };
+                        edge.data.completed = e.currentTarget.checked;
+                      }}
+                    />
+                    已完成
+                  </label>
+                  <button class="delete-node-btn" onclick={() => onDeleteEdge?.(edge.id)} title="删除"><Trash2 size={12} /></button>
+                </div>
+              {/each}
+            </div>
+          {/if}
+        {/each}
+      </div>
+    {/if}
   {/if}
 
   <!-- Common Modals -->
@@ -341,7 +416,6 @@
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 13px;
-    width: 100%;
     outline: none;
     transition: border-color 0.2s;
   }
@@ -394,5 +468,81 @@
   }
   .editor-trigger:hover {
     filter: brightness(1.2);
+  }
+
+  .edge-section {
+    border-top: 1px solid #333;
+    padding-top: 12px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .edge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .edge-title {
+    font-size: 12px;
+    color: var(--theme-color);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #ccc;
+  }
+  .checkbox-label input[type="checkbox"] {
+    accent-color: var(--theme-color);
+    width: 16px;
+    height: 16px;
+  }
+  .handle-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .handle-label {
+    font-size: 11px;
+    color: #aaa;
+    font-weight: bold;
+  }
+  .edge-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    background: #1a1a1a;
+    border-radius: 6px;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .edge-style-select {
+    flex: 1 1 0;
+    min-width: 0;
+    background: #111;
+    border: 1px solid #333;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    outline: none;
+  }
+  .checkbox-label.compact {
+    font-size: 11px;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .checkbox-label.compact input[type="checkbox"] {
+    width: 13px;
+    height: 13px;
   }
 </style>

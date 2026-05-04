@@ -1,7 +1,7 @@
 import JSZip from "jszip";
 import { db } from "./db";
 
-export async function exportProjectToZip(nodes: any[], config: { bgColor: string; themeColor: string; exportScale: number }) {
+export async function exportProjectToZip(nodes: any[], config: { bgColor: string; themeColor: string; exportScale: number }, focusNodes: any[] = [], focusEdges: any[] = []) {
   const zip = new JSZip();
   const assetsFolder = zip.folder("assets");
   const assetMap = new Map<string, string>();
@@ -57,6 +57,14 @@ export async function exportProjectToZip(nodes: any[], config: { bgColor: string
     }
   }
 
-  zip.file("project.json", JSON.stringify({ nodes: nodesToExport, config }, null, 2));
+  // Process focus nodes
+  const focusNodesToExport = JSON.parse(JSON.stringify(focusNodes));
+  for (const node of focusNodesToExport) {
+    if (node.data && node.data.icon) {
+      node.data.icon = await processImage(node.data.icon);
+    }
+  }
+
+  zip.file("project.json", JSON.stringify({ nodes: nodesToExport, focusNodes: focusNodesToExport, focusEdges, config }, null, 2));
   return await zip.generateAsync({ type: "blob" });
 }

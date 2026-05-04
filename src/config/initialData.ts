@@ -1,4 +1,4 @@
-import type { Node } from "@xyflow/svelte";
+import type { Node, Edge } from "@xyflow/svelte";
 
 export const DEFAULT_CHART_DATA = {
   labels: [
@@ -126,4 +126,55 @@ export const INITIAL_NODES: Node[] = [
     width: 800,
     height: 500
   }
+];
+
+export const INITIAL_FOCUS_NODES: Node[] = [
+  {
+    id: "focus-init-1",
+    type: "focus",
+    position: { x: 200, y: 50 },
+    data: { icon: "/preset/USA_USA_enforce_order.png", label: "保持秩序", status: "completed" },
+  },
+  {
+    id: "focus-init-2",
+    type: "focus",
+    position: { x: 100, y: 200 },
+    data: { icon: "/preset/USA_USA_invoke_the_insurrection_act.png", label: "通过叛乱法", status: "inProgress" },
+  },
+  {
+    id: "focus-init-3",
+    type: "focus",
+    position: { x: 300, y: 200 },
+    data: { icon: "/preset/USA_USA_lasting_peace.png", label: "持久和平", status: "unavailable" },
+  },
+];
+
+export const INITIAL_FOCUS_EDGES: Edge[] = [
+  {
+    id: "focus-edge-1-2",
+    source: "focus-init-1",
+    target: "focus-init-2",
+    sourceHandle: "bottom",
+    targetHandle: "top",
+    type: "focusStep",
+    data: { dashed: false, exclusive: false, completed: true },
+  },
+  {
+    id: "focus-edge-1-3",
+    source: "focus-init-1",
+    target: "focus-init-3",
+    sourceHandle: "bottom",
+    targetHandle: "top",
+    type: "focusStep",
+    data: { dashed: true, exclusive: false, completed: false },
+  },
+  {
+    id: "focus-edge-2-3",
+    source: "focus-init-2",
+    target: "focus-init-3",
+    sourceHandle: "right",
+    targetHandle: "left",
+    type: "focusStep",
+    data: { dashed: false, exclusive: true, completed: false },
+  },
 ];

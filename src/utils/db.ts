@@ -46,7 +46,7 @@ export class AppDatabase {
 
     for (const node of snapshot) {
       if (!node.data) continue;
-      const keys = ["leaderImg", "flagImg", "ideologyImg", "factionImg", "focusImg", "newsImg", "eventImg", "superImg", "url"];
+      const keys = ["leaderImg", "flagImg", "ideologyImg", "factionImg", "focusImg", "newsImg", "eventImg", "superImg", "url", "icon"];
       for (const k of keys) {
         if (typeof node.data[k] === "string" && node.data[k].startsWith("blob:")) {
           const picId = this.getPicIdByUrl(node.data[k]);
@@ -70,7 +70,7 @@ export class AppDatabase {
     const snapshot = JSON.parse(JSON.stringify(nodes));
     for (const node of snapshot) {
       if (!node.data) continue;
-      const keys = ["leaderImg", "flagImg", "ideologyImg", "factionImg", "focusImg", "newsImg", "eventImg", "superImg", "url"];
+      const keys = ["leaderImg", "flagImg", "ideologyImg", "factionImg", "focusImg", "newsImg", "eventImg", "superImg", "url", "icon"];
       for (const k of keys) {
         if (typeof node.data[k] === "string" && node.data[k].startsWith("__custom_pic__:")) {
           const id = parseInt(node.data[k].split(":")[1]);
@@ -119,12 +119,15 @@ export class AppDatabase {
   async saveAutosave(data: any) {
     const db = await this.init();
     const serializedNodes = await this.serializeBlobUrls(data.nodes || []);
+    const serializedFocusNodes = await this.serializeBlobUrls(data.focusNodes || []);
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(["autosave"], "readwrite");
       const store = transaction.objectStore("autosave");
       store.put({
         id: "current",
         nodes: serializedNodes,
+        focusNodes: serializedFocusNodes,
+        focusEdges: JSON.parse(JSON.stringify(data.focusEdges || [])),
         config: data.config || {},
         timestamp: new Date()
       });
@@ -143,6 +146,9 @@ export class AppDatabase {
         const result = request.result || null;
         if (result && result.nodes) {
           result.nodes = await this.deserializeBlobUrls(result.nodes);
+        }
+        if (result && result.focusNodes) {
+          result.focusNodes = await this.deserializeBlobUrls(result.focusNodes);
         }
         resolve(result);
       };

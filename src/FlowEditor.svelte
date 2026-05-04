@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { SvelteFlow, Background, Controls, type Node, useSvelteFlow } from "@xyflow/svelte";
+  import { SvelteFlow, Background, Controls, type Node, type Edge, useSvelteFlow, ConnectionMode } from "@xyflow/svelte";
   import "@xyflow/svelte/dist/style.css";
   import { toPng } from "html-to-image";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import { ImageIcon, HelpCircle, Type, PieChart as PieIcon } from "lucide-svelte";
+  import { ImageIcon, HelpCircle, Type, PieChart as PieIcon, Plus, TreePine } from "lucide-svelte";
   import JSZip from "jszip";
   import { exportProjectToZip } from "./utils/exportUtils";
 
@@ -17,6 +17,8 @@
   import TextNode from "./nodes/TextNode.svelte";
   import ImageNode from "./nodes/ImageNode.svelte";
   import StandalonePieNode from "./nodes/StandalonePieNode.svelte";
+  import FocusNode from "./nodes/FocusNode.svelte";
+  import FocusStepEdge from "./edges/FocusStepEdge.svelte";
 
   import PropertiesPanel from "./components/PropertiesPanel.svelte";
   import Modal from "./components/Modal.svelte";
@@ -24,7 +26,7 @@
   import SettingsPanel from "./components/SettingsPanel.svelte";
   import PresetManager from "./components/PresetManager.svelte";
 
-  import { INITIAL_NODES, DEFAULT_CHART_DATA } from "./config/initialData";
+  import { INITIAL_NODES, INITIAL_FOCUS_NODES, INITIAL_FOCUS_EDGES, DEFAULT_CHART_DATA } from "./config/initialData";
   import { db } from "./utils/db";
 
   const nodeTypes = {
@@ -37,10 +39,27 @@
     text: TextNode,
     image: ImageNode,
     pie: StandalonePieNode,
+    focus: FocusNode,
   } as any;
 
+  const edgeTypes = {
+    focusStep: FocusStepEdge,
+  } as any;
+
+  // Page state
+  let activePage = $state<"event" | "focus">("event");
+
+  // Event page data
   let nodes = $state<Node[]>([]);
   let selectedNode = $derived(nodes.find((n) => n.selected));
+
+  // Focus page data
+  let focusNodes = $state<Node[]>([]);
+  let focusEdges = $state<Edge[]>([]);
+  let selectedFocusNode = $derived(focusNodes.find((n) => n.selected));
+
+  // Which node/edge is selected for the properties panel
+  let panelNode = $derived(activePage === "focus" ? selectedFocusNode : selectedNode);
 
   let showAddMenu = $state(false);
   let showSettings = $state(false);
@@ -57,21 +76,27 @@
     const saved = await db.getAutosave();
     if (saved && saved.nodes) {
       nodes = saved.nodes;
+      focusNodes = saved.focusNodes || [];
+      focusEdges = saved.focusEdges || [];
       canvasBgColor = saved.config?.bgColor || "#121212";
       themeColor = saved.config?.themeColor || "#ff0071";
       exportScale = saved.config?.exportScale || 2;
     } else {
       nodes = JSON.parse(JSON.stringify(INITIAL_NODES));
+      focusNodes = JSON.parse(JSON.stringify(INITIAL_FOCUS_NODES));
+      focusEdges = JSON.parse(JSON.stringify(INITIAL_FOCUS_EDGES));
     }
   });
 
   let saveTimeout: any;
   $effect(() => {
-    if (nodes.length > 0) {
+    if (nodes.length > 0 || focusNodes.length > 0) {
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(() => {
         db.saveAutosave({
           nodes,
+          focusNodes,
+          focusEdges,
           config: { bgColor: canvasBgColor, themeColor, exportScale },
         });
       }, 1000);
@@ -83,7 +108,16 @@
   });
 
   function deleteNode(id: string) {
-    nodes = nodes.filter((n) => n.id !== id);
+    if (activePage === "focus") {
+      focusNodes = focusNodes.filter((n) => n.id !== id);
+      focusEdges = focusEdges.filter((e) => e.source !== id && e.target !== id);
+    } else {
+      nodes = nodes.filter((n) => n.id !== id);
+    }
+  }
+
+  function deleteFocusEdge(id: string) {
+    focusEdges = focusEdges.filter((e) => e.id !== id);
   }
 
   function addWindow(type: string, pos?: { x: number; y: number }) {
@@ -121,6 +155,16 @@
     showAddMenu = false;
   }
 
+  function addFocusNode(pos?: { x: number; y: number }) {
+    const id = `focus-${Date.now()}`;
+    focusNodes.push({
+      id,
+      type: "focus",
+      position: pos || { x: 200 + Math.random() * 100, y: 100 + Math.random() * 100 },
+      data: { icon: "", label: "新国策", status: "unavailable" },
+    });
+  }
+
   async function exportImage() {
     const flowElement = document.querySelector(".svelte-flow") as HTMLElement;
     if (!flowElement) return;
@@ -149,7 +193,7 @@
     loadingStatus = "正在打包资源...";
     try {
       const config = { bgColor: canvasBgColor, themeColor, exportScale };
-      const blob = await exportProjectToZip(nodes, config);
+      const blob = await exportProjectToZip(nodes, config, focusNodes, focusEdges);
       const link = document.createElement("a");
       link.download = `full-project-${Date.now()}.zip`;
       link.href = URL.createObjectURL(blob);
@@ -174,7 +218,6 @@
       const projectData = JSON.parse(await jsonFile.async("string"));
       const nodesToImport = projectData.nodes;
 
-      // Map to track relative path -> new blob URL
       const pathMap = new Map<string, string>();
 
       const restoreImage = async (path: string) => {
@@ -185,7 +228,6 @@
         const imgFile = zip.file(zipPath);
         if (imgFile) {
           const blob = await imgFile.async("blob");
-          // Save to custom pics so it's permanent
           const id = await db.addCustomPic("imported", imgFile.name, blob);
           const results = await db.getAllCustomPics("imported");
           const newUrl = results.find((r) => r.filename === imgFile.name)?.url;
@@ -198,7 +240,7 @@
       };
 
       for (const node of nodesToImport) {
-        const keys = ["leaderImg", "flagImg", "ideologyImg", "factionImg", "focusImg", "newsImg", "eventImg", "superImg", "url"];
+        const keys = ["leaderImg", "flagImg", "ideologyImg", "factionImg", "focusImg", "newsImg", "eventImg", "superImg", "url", "icon"];
         for (const k of keys) if (node.data[k]) node.data[k] = await restoreImage(node.data[k]);
         if (node.data.spirits) {
           for (const s of node.data.spirits) s.url = await restoreImage(s.url);
@@ -206,6 +248,9 @@
       }
 
       nodes = nodesToImport;
+      focusNodes = projectData.focusNodes || [];
+      focusEdges = projectData.focusEdges || [];
+
       if (projectData.config) {
         canvasBgColor = projectData.config.bgColor || "#121212";
         themeColor = projectData.config.themeColor || "#ff0071";
@@ -243,6 +288,8 @@
               const p = JSON.parse(e.target?.result as string);
               if (p.nodes) {
                 nodes = p.nodes;
+                focusNodes = p.focusNodes || [];
+                focusEdges = p.focusEdges || [];
                 if (p.config) {
                   canvasBgColor = p.config.bgColor;
                   themeColor = p.config.themeColor;
@@ -259,7 +306,14 @@
         }
         break;
       case "clear":
-        if (confirm("清空画布？")) nodes = [];
+        if (confirm("清空画布？")) {
+          if (activePage === "focus") {
+            focusNodes = [];
+            focusEdges = [];
+          } else {
+            nodes = [];
+          }
+        }
         break;
       case "export-png":
         exportImage();
@@ -270,12 +324,23 @@
 
 <div class="flow-wrapper" style:background-color={canvasBgColor}>
   <div class="top-left-panel">
-    <ProjectMenu onAction={handleMenuAction} />
+    <div class="top-bar-row">
+      <ProjectMenu onAction={handleMenuAction} />
+      <div class="page-toggle">
+        <button class:active={activePage === "event"} onclick={() => (activePage = "event")}>事件</button>
+        <button class:active={activePage === "focus"} onclick={() => (activePage = "focus")}>国策树</button>
+      </div>
+      {#if activePage === "focus"}
+        <button class="add-focus-btn" onclick={() => addFocusNode()}>
+          <Plus size={14} /> 添加国策
+        </button>
+      {/if}
+    </div>
   </div>
 
-  {#if selectedNode}
+  {#if panelNode}
     <div class="right-panel" transition:fade={{ duration: 150 }}>
-      <PropertiesPanel node={selectedNode} onDelete={() => deleteNode(selectedNode!.id)} />
+      <PropertiesPanel node={panelNode} onDelete={() => deleteNode(panelNode!.id)} focusEdges={activePage === "focus" ? focusEdges : []} onDeleteEdge={(id: string) => deleteFocusEdge(id)} />
     </div>
   {/if}
 
@@ -321,10 +386,27 @@
     <SettingsPanel bind:bgColor={canvasBgColor} bind:themeColor bind:exportScale />
   </Modal>
 
-  <SvelteFlow bind:nodes {nodeTypes} initialViewport={{ zoom: 1, x: 50, y: 50 }} snapGrid={[10, 10]}>
-    <Background gap={20} patternColor="#333" bgColor={canvasBgColor} />
-    <Controls position="bottom-left" />
-  </SvelteFlow>
+  {#if activePage === "event"}
+    <SvelteFlow bind:nodes {nodeTypes} initialViewport={{ zoom: 1, x: 50, y: 50 }} snapGrid={[10, 10]} connectionMode={ConnectionMode.Loose}>
+      <Background gap={20} patternColor="#333" bgColor={canvasBgColor} />
+      <Controls position="bottom-left" />
+    </SvelteFlow>
+  {:else}
+    <SvelteFlow
+      bind:nodes={focusNodes}
+      bind:edges={focusEdges}
+      {nodeTypes}
+      {edgeTypes}
+      initialViewport={{ zoom: 1, x: 50, y: 50 }}
+      snapGrid={[10, 10]}
+      defaultEdgeOptions={{ type: "focusStep", data: { dashed: false, exclusive: false, completed: false } }}
+      fitView
+      connectionMode={ConnectionMode.Loose}
+    >
+      <Background gap={20} patternColor="#333" bgColor={canvasBgColor} />
+      <Controls position="bottom-left" />
+    </SvelteFlow>
+  {/if}
 
   {#if isExporting}
     <div class="export-overlay" transition:fade>
@@ -349,24 +431,53 @@
     flex-direction: column;
     gap: 10px;
   }
-  .status-badge {
-    background: rgba(0, 0, 0, 0.6);
+  .top-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .page-toggle {
+    display: flex;
+    gap: 2px;
+    background: #111;
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid #333;
+  }
+  .page-toggle button {
+    background: transparent;
+    border: none;
     color: #888;
-    font-size: 10px;
-    padding: 4px 10px;
-    border-radius: 20px;
+    padding: 7px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: "Cubic", sans-serif;
+    transition: 0.2s;
+  }
+  .page-toggle button.active {
+    background: #333;
+    color: var(--theme-color);
+  }
+  .page-toggle button:hover:not(.active) {
+    color: #ccc;
+  }
+  .add-focus-btn {
+    background: #224422;
+    color: #88ff88;
+    border: 1px solid #336633;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: "Cubic", sans-serif;
     display: flex;
     align-items: center;
     gap: 6px;
-    border: 1px solid #333;
-    width: fit-content;
+    transition: 0.2s;
   }
-  .dot {
-    width: 6px;
-    height: 6px;
-    background: #44ff44;
-    border-radius: 50%;
-    box-shadow: 0 0 5px #44ff44;
+  .add-focus-btn:hover {
+    background: #2a5a2a;
   }
   .right-panel {
     position: absolute;
