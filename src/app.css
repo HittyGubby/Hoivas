@@ -1,31 +1,46 @@
 @font-face {
   font-family: FZRui;
-  src: url(/fonts/FZRuiZHJW.woff2) format("woff2");
+  src: url(/common/fonts/FZRuiZHJW.woff2) format("woff2");
 }
 
 @font-face {
   font-family: Cubic;
-  src: url(/fonts/Cubic.woff2) format("woff2");
+  src: url(/common/fonts/Cubic.woff2) format("woff2");
 }
 
 @font-face {
   font-family: electrolize;
-  src: url(/fonts/electrolize.woff2) format("woff2");
+  src: url(/common/fonts/electrolize.woff2) format("woff2");
 }
 
 @font-face {
   font-family: kenyan;
-  src: url(/fonts/kenyancoffee.woff2) format("woff2");
+  src: url(/common/fonts/kenyancoffee.woff2) format("woff2");
 }
 
 @font-face {
   font-family: huangyouti;
-  src: url(/fonts/huangyouti.woff2) format("woff2");
+  src: url(/common/fonts/huangyouti.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: Aldrich;
+  src: url(/common/fonts/Aldrich-Regular.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: FZWH;
+  src: url(/common/fonts/FZWH.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: Bombard;
+  src: url(/common/fonts/BOMBARD_.woff2) format("woff2");
 }
 
 @font-face {
   font-family: OldTypeNr;
-  src: url(/fonts/OldTyperNr.woff2) format("woff2");
+  src: url(/common/fonts/OldTyperNr.woff2) format("woff2");
 }
 
 * {

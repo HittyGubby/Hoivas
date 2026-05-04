@@ -1,4 +1,3 @@
-const DB_NAME = "TFR";
 const DB_VERSION = 5;
 
 export interface CustomPic {
@@ -14,11 +13,25 @@ export interface CustomPic {
 export class AppDatabase {
   private db: IDBDatabase | null = null;
   private urlCache = new Map<number, string>();
+  private dbName: string;
+
+  constructor(dbName: string = "") {
+    this.dbName = dbName;
+  }
+
+  setDbName(name: string) {
+    if (this.dbName !== name) {
+      this.dbName = name;
+      this.db = null;
+      this.urlCache.forEach(url => URL.revokeObjectURL(url));
+      this.urlCache.clear();
+    }
+  }
 
   async init(): Promise<IDBDatabase> {
     if (this.db) return this.db;
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(DB_NAME, DB_VERSION);
+      const request = indexedDB.open(this.dbName, DB_VERSION);
       request.onerror = () => reject(request.error);
       request.onsuccess = () => { this.db = request.result; resolve(request.result); };
       request.onupgradeneeded = (event: any) => {
@@ -137,23 +150,23 @@ export class AppDatabase {
   }
 
   async getAutosave(): Promise<any | null> {
-    const db = await this.init();
-    return new Promise((resolve) => {
-      const transaction = db.transaction(["autosave"], "readonly");
-      const store = transaction.objectStore("autosave");
-      const request = store.get("current");
-      request.onsuccess = async () => {
-        const result = request.result || null;
-        if (result && result.nodes) {
-          result.nodes = await this.deserializeBlobUrls(result.nodes);
-        }
-        if (result && result.focusNodes) {
-          result.focusNodes = await this.deserializeBlobUrls(result.focusNodes);
-        }
-        resolve(result);
-      };
-      request.onerror = () => resolve(null);
-    });
+    // const db = await this.init();
+    // return new Promise((resolve) => {
+    //   const transaction = db.transaction(["autosave"], "readonly");
+    //   const store = transaction.objectStore("autosave");
+    //   const request = store.get("current");
+    //   request.onsuccess = async () => {
+    //     const result = request.result || null;
+    //     if (result && result.nodes) {
+    //       result.nodes = await this.deserializeBlobUrls(result.nodes);
+    //     }
+    //     if (result && result.focusNodes) {
+    //       result.focusNodes = await this.deserializeBlobUrls(result.focusNodes);
+    //     }
+    //     resolve(result);
+    //   };
+    //   request.onerror = () => resolve(null);
+    // });
   }
 
   async saveProject(name: string, nodes: any[], config?: any) {

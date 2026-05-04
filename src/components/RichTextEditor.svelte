@@ -9,14 +9,13 @@
 
   let internalChange = false;
 
-  // Helper to strip ONLY the outer <p> tags but keep internal style spans
-  function stripParagraphs(html: string) {
-    if (html === "<p><br></p>") return "";
-    // This regex replaces <p>...</p> with just the content plus a line break if needed
-    return html
-      .replace(/<p>/gi, "")
-      .replace(/<\/p>/gi, "<br>")
-      .replace(/(<br>)+$/gi, ""); // Strip trailing breaks
+  function wrap(html: string) {
+    return `<p>${html}</p>`;
+  }
+
+  function unwrap(html: string) {
+    //strip eall surrounding p tags and double br tags
+    return html.replace(/<\/p><p>/g, "<br>").replace(/^<p>|<\/p>$/g, "");
   }
 
   onMount(() => {
@@ -47,12 +46,9 @@
       theme: "snow",
     });
 
-    // We wrap content in <p> internally for Quill, but strip it for the app
-    quill.root.innerHTML = content ? `<p>${content.replace(/<br>/gi, "</p><p>")}</p>` : "";
-
     quill.on("text-change", () => {
       internalChange = true;
-      content = stripParagraphs(quill.root.innerHTML);
+      content = unwrap(quill.root.innerHTML);
       setTimeout(() => {
         internalChange = false;
       }, 0);
@@ -61,7 +57,7 @@
 
   $effect(() => {
     if (quill && !internalChange) {
-      const wrapped = content ? `<p>${content.replace(/<br>/gi, "</p><p>")}</p>` : "";
+      const wrapped = unwrap(content);
       if (wrapped !== quill.root.innerHTML) {
         quill.root.innerHTML = wrapped;
       }

@@ -2,23 +2,37 @@
   import { SvelteFlow, Background, Controls, type Node, type Edge, useSvelteFlow, ConnectionMode } from "@xyflow/svelte";
   import "@xyflow/svelte/dist/style.css";
   import { toPng } from "html-to-image";
-  import { onMount } from "svelte";
+  import { onMount, setContext } from "svelte";
   import { fade } from "svelte/transition";
-  import { ImageIcon, HelpCircle, Type, PieChart as PieIcon, Plus, TreePine } from "lucide-svelte";
+  import { ImageIcon, HelpCircle, Type, PieChart as PieIcon, Plus, TreePine, Home } from "lucide-svelte";
   import JSZip from "jszip";
   import { exportProjectToZip } from "./utils/exportUtils";
+  import { currentVersion } from "./utils/version";
+  import { globalSettings } from "./utils/settings";
 
-  import MainWindowNode from "./nodes/MainWindowNode.svelte";
-  import NewsNode from "./nodes/NewsNode.svelte";
-  import EventNode from "./nodes/EventNode.svelte";
-  import SupereventNode from "./nodes/SupereventNode.svelte";
-  import SpiritNode from "./nodes/SpiritNode.svelte";
-  import DescriptionNode from "./nodes/DescriptionNode.svelte";
+  // Shared Atomic Nodes
   import TextNode from "./nodes/TextNode.svelte";
   import ImageNode from "./nodes/ImageNode.svelte";
   import StandalonePieNode from "./nodes/StandalonePieNode.svelte";
-  import FocusNode from "./nodes/FocusNode.svelte";
   import FocusStepEdge from "./edges/FocusStepEdge.svelte";
+
+  // TFR Specific Nodes
+  import TFRMainWindowNode from "./nodes/tfr/MainWindowNode.svelte";
+  import TFRNewsNode from "./nodes/tfr/NewsNode.svelte";
+  import TFREventNode from "./nodes/tfr/EventNode.svelte";
+  import TFRSupereventNode from "./nodes/tfr/SupereventNode.svelte";
+  import TFRSpiritNode from "./nodes/tfr/SpiritNode.svelte";
+  import TFRDescriptionNode from "./nodes/tfr/DescriptionNode.svelte";
+  import TFRFocusNode from "./nodes/tfr/FocusNode.svelte";
+
+  // TNO Specific Nodes
+  import TNOMainWindowNode from "./nodes/tno/MainWindowNode.svelte";
+  import TNONewsNode from "./nodes/tno/NewsNode.svelte";
+  import TNOEventNode from "./nodes/tno/EventNode.svelte";
+  import TNOSupereventNode from "./nodes/tno/SupereventNode.svelte";
+  import TNOSpiritNode from "./nodes/tno/SpiritNode.svelte";
+  import TNODescriptionNode from "./nodes/tno/DescriptionNode.svelte";
+  import TNOFocusNode from "./nodes/tno/FocusNode.svelte";
 
   import PropertiesPanel from "./components/PropertiesPanel.svelte";
   import Modal from "./components/Modal.svelte";
@@ -26,21 +40,41 @@
   import SettingsPanel from "./components/SettingsPanel.svelte";
   import PresetManager from "./components/PresetManager.svelte";
 
-  import { INITIAL_NODES, INITIAL_FOCUS_NODES, INITIAL_FOCUS_EDGES, DEFAULT_CHART_DATA } from "./config/initialData";
+  import { TFR_INITIAL_NODES, TFR_INITIAL_FOCUS_NODES, TFR_INITIAL_FOCUS_EDGES, TFR_CHART_DATA } from "./config/tfrInitialData";
+  import { TNO_INITIAL_NODES, TNO_INITIAL_FOCUS_NODES, TNO_INITIAL_FOCUS_EDGES, TNO_CHART_DATA } from "./config/tnoInitialData";
   import { db } from "./utils/db";
 
-  const nodeTypes = {
-    mainWindow: MainWindowNode,
-    news: NewsNode,
-    event: EventNode,
-    super: SupereventNode,
-    spirit: SpiritNode,
-    desc: DescriptionNode,
-    text: TextNode,
-    image: ImageNode,
-    pie: StandalonePieNode,
-    focus: FocusNode,
-  } as any;
+  let { version } = $props();
+  setContext("version", version);
+
+  const nodeTypesMap: Record<string, any> = {
+    tfr: {
+      mainWindow: TFRMainWindowNode,
+      news: TFRNewsNode,
+      event: TFREventNode,
+      super: TFRSupereventNode,
+      spirit: TFRSpiritNode,
+      desc: TFRDescriptionNode,
+      focus: TFRFocusNode,
+      text: TextNode,
+      image: ImageNode,
+      pie: StandalonePieNode,
+    },
+    tno: {
+      mainWindow: TNOMainWindowNode,
+      news: TNONewsNode,
+      event: TNOEventNode,
+      super: TNOSupereventNode,
+      spirit: TNOSpiritNode,
+      desc: TNODescriptionNode,
+      focus: TNOFocusNode,
+      text: TextNode,
+      image: ImageNode,
+      pie: StandalonePieNode,
+    },
+  };
+
+  const nodeTypes = nodeTypesMap[version] || nodeTypesMap.tfr;
 
   const edgeTypes = {
     focusStep: FocusStepEdge,
@@ -67,24 +101,27 @@
   let isExporting = $state(false);
   let loadingStatus = $state("");
 
-  // Global settings
-  let canvasBgColor = $state("#121212");
-  let themeColor = $state("#ff0071");
-  let exportScale = $state(2);
-
   onMount(async () => {
+    db.setDbName(version.toUpperCase());
     const saved = await db.getAutosave();
     if (saved && saved.nodes) {
       nodes = saved.nodes;
       focusNodes = saved.focusNodes || [];
       focusEdges = saved.focusEdges || [];
-      canvasBgColor = saved.config?.bgColor || "#121212";
-      themeColor = saved.config?.themeColor || "#ff0071";
-      exportScale = saved.config?.exportScale || 2;
+      globalSettings.update((s) => ({
+        ...s,
+        bgColor: saved.config?.bgColor || s.bgColor,
+        themeColor: saved.config?.themeColor || s.themeColor,
+        exportScale: saved.config?.exportScale || s.exportScale,
+      }));
     } else {
-      nodes = JSON.parse(JSON.stringify(INITIAL_NODES));
-      focusNodes = JSON.parse(JSON.stringify(INITIAL_FOCUS_NODES));
-      focusEdges = JSON.parse(JSON.stringify(INITIAL_FOCUS_EDGES));
+      const initNodes = version === "tno" ? TNO_INITIAL_NODES : TFR_INITIAL_NODES;
+      const initFocusNodes = version === "tno" ? TNO_INITIAL_FOCUS_NODES : TFR_INITIAL_FOCUS_NODES;
+      const initFocusEdges = version === "tno" ? TNO_INITIAL_FOCUS_EDGES : TFR_INITIAL_FOCUS_EDGES;
+
+      nodes = JSON.parse(JSON.stringify(initNodes));
+      focusNodes = JSON.parse(JSON.stringify(initFocusNodes));
+      focusEdges = JSON.parse(JSON.stringify(initFocusEdges));
     }
   });
 
@@ -97,14 +134,10 @@
           nodes,
           focusNodes,
           focusEdges,
-          config: { bgColor: canvasBgColor, themeColor, exportScale },
+          config: { bgColor: $globalSettings.bgColor, themeColor: $globalSettings.themeColor, exportScale: $globalSettings.exportScale },
         });
       }, 1000);
     }
-  });
-
-  $effect(() => {
-    document.documentElement.style.setProperty("--theme-color", themeColor);
   });
 
   function deleteNode(id: string) {
@@ -124,7 +157,9 @@
     const id = `${type}-${Date.now()}`;
     let defaultData: any = { alias: "" };
 
-    const initNode = INITIAL_NODES.find((n) => n.type === type);
+    const baseInitNodes = version === "tno" ? TNO_INITIAL_NODES : TFR_INITIAL_NODES;
+    const initNode = baseInitNodes.find((n) => n.type === type);
+
     if (initNode && !["text", "image", "pie"].includes(type)) {
       defaultData = JSON.parse(JSON.stringify(initNode.data));
       defaultData.alias = "";
@@ -137,7 +172,8 @@
           defaultData = { url: "", fit: "contain" };
           break;
         case "pie":
-          defaultData = { chartData: JSON.parse(JSON.stringify(DEFAULT_CHART_DATA)) };
+          const defaultChart = version === "tno" ? TNO_CHART_DATA : TFR_CHART_DATA;
+          defaultData = { chartData: JSON.parse(JSON.stringify(defaultChart)) };
           break;
         default:
           defaultData = { alias: "" };
@@ -172,8 +208,8 @@
     try {
       await new Promise((r) => setTimeout(r, 300));
       const dataUrl = await toPng(flowElement, {
-        backgroundColor: canvasBgColor,
-        pixelRatio: exportScale,
+        backgroundColor: $globalSettings.bgColor,
+        pixelRatio: $globalSettings.exportScale,
         filter: (node: any) =>
           node.classList ? !node.classList.contains("svelte-flow__controls") && !node.classList.contains("svelte-flow__panel") && !node.classList.contains("svelte-flow__handle") : true,
       });
@@ -192,7 +228,7 @@
     isExporting = true;
     loadingStatus = "正在打包资源...";
     try {
-      const config = { bgColor: canvasBgColor, themeColor, exportScale };
+      const config = { bgColor: $globalSettings.bgColor, themeColor: $globalSettings.themeColor, exportScale: $globalSettings.exportScale };
       const blob = await exportProjectToZip(nodes, config, focusNodes, focusEdges);
       const link = document.createElement("a");
       link.download = `full-project-${Date.now()}.zip`;
@@ -252,9 +288,11 @@
       focusEdges = projectData.focusEdges || [];
 
       if (projectData.config) {
-        canvasBgColor = projectData.config.bgColor || "#121212";
-        themeColor = projectData.config.themeColor || "#ff0071";
-        exportScale = projectData.config.exportScale || 2;
+        globalSettings.set({
+          bgColor: projectData.config.bgColor || "#121212",
+          themeColor: projectData.config.themeColor || (version === "tno" ? "#00ffcc" : "#ff0071"),
+          exportScale: projectData.config.exportScale || 2,
+        });
       }
     } catch (err: any) {
       alert("导入失败: " + err.message);
@@ -291,9 +329,12 @@
                 focusNodes = p.focusNodes || [];
                 focusEdges = p.focusEdges || [];
                 if (p.config) {
-                  canvasBgColor = p.config.bgColor;
-                  themeColor = p.config.themeColor;
-                  exportScale = p.config.exportScale;
+                  globalSettings.update((s) => ({
+                    ...s,
+                    bgColor: p.config.bgColor,
+                    themeColor: p.config.themeColor,
+                    exportScale: p.config.exportScale,
+                  }));
                 }
               } else {
                 nodes = p;
@@ -320,11 +361,20 @@
         break;
     }
   }
+
+  function goHome() {
+    if (confirm("返回主页？未保存的更改可能会丢失（已启用自动保存到本地数据库）。")) {
+      currentVersion.set(null);
+    }
+  }
 </script>
 
-<div class="flow-wrapper" style:background-color={canvasBgColor}>
+<div class="flow-wrapper" style:background-color={$globalSettings.bgColor}>
   <div class="top-left-panel">
     <div class="top-bar-row">
+      <button class="home-btn" onclick={goHome} title="返回主页">
+        <Home size={18} />
+      </button>
       <ProjectMenu onAction={handleMenuAction} />
       <div class="page-toggle">
         <button class:active={activePage === "event"} onclick={() => (activePage = "event")}>事件</button>
@@ -372,23 +422,26 @@
   <Modal title="本地存档管理" bind:isOpen={showPresets} width="600px">
     <PresetManager
       bind:nodes
-      config={{ bgColor: canvasBgColor, themeColor, exportScale }}
+      config={{ bgColor: $globalSettings.bgColor, themeColor: $globalSettings.themeColor, exportScale: $globalSettings.exportScale }}
       onLoaded={() => (showPresets = false)}
       onConfigLoad={(c: any) => {
-        canvasBgColor = c.bgColor || canvasBgColor;
-        themeColor = c.themeColor || themeColor;
-        exportScale = c.exportScale || exportScale;
+        globalSettings.update((s) => ({
+          ...s,
+          bgColor: c.bgColor || s.bgColor,
+          themeColor: c.themeColor || s.themeColor,
+          exportScale: c.exportScale || s.exportScale,
+        }));
       }}
     />
   </Modal>
 
   <Modal title="系统设置" bind:isOpen={showSettings} width="500px" height="auto">
-    <SettingsPanel bind:bgColor={canvasBgColor} bind:themeColor bind:exportScale />
+    <SettingsPanel bind:bgColor={$globalSettings.bgColor} bind:themeColor={$globalSettings.themeColor} bind:exportScale={$globalSettings.exportScale} />
   </Modal>
 
   {#if activePage === "event"}
     <SvelteFlow bind:nodes {nodeTypes} initialViewport={{ zoom: 1, x: 50, y: 50 }} snapGrid={[10, 10]} connectionMode={ConnectionMode.Loose}>
-      <Background gap={20} patternColor="#333" bgColor={canvasBgColor} />
+      <Background gap={20} patternColor="#333" bgColor={$globalSettings.bgColor} />
       <Controls position="bottom-left" />
     </SvelteFlow>
   {:else}
@@ -403,14 +456,14 @@
       fitView
       connectionMode={ConnectionMode.Loose}
     >
-      <Background gap={20} patternColor="#333" bgColor={canvasBgColor} />
+      <Background gap={20} patternColor="#333" bgColor={$globalSettings.bgColor} />
       <Controls position="bottom-left" />
     </SvelteFlow>
   {/if}
 
   {#if isExporting}
     <div class="export-overlay" transition:fade>
-      <div class="loader">{loadingStatus || `正在生成 ${exportScale}x 截图...`}</div>
+      <div class="loader">{loadingStatus || `正在生成 ${$globalSettings.exportScale}x 截图...`}</div>
     </div>
   {/if}
 </div>
@@ -435,6 +488,23 @@
     display: flex;
     align-items: center;
     gap: 8px;
+  }
+  .home-btn {
+    background: #222;
+    border: 1px solid #444;
+    color: #ccc;
+    padding: 7px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+  }
+  .home-btn:hover {
+    background: #333;
+    color: white;
+    border-color: var(--theme-color);
   }
   .page-toggle {
     display: flex;
@@ -478,6 +548,15 @@
   }
   .add-focus-btn:hover {
     background: #2a5a2a;
+  }
+  .version-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: #888;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    font-weight: bold;
   }
   .right-panel {
     position: absolute;

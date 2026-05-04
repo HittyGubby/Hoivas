@@ -162,7 +162,7 @@
       </div>
     </div>
     <div class="section">
-      <button class="editor-trigger secondary" onclick={() => openPicManager("", node.type + "Img")}>更换图片</button>
+      <button class="editor-trigger secondary" onclick={() => openPicManager(node.type, node.type + "Img")}>更换图片</button>
     </div>
     <div class="section">
       <label>正文内容</label>
@@ -187,7 +187,7 @@
       </div>
     </div>
     <div class="section">
-      <button class="editor-trigger secondary" onclick={() => openPicManager("", "superImg")}>更换背景图</button>
+      <button class="editor-trigger secondary" onclick={() => openPicManager("super", "superImg")}>更换背景图</button>
     </div>
     <div class="section">
       <label>格言 / 引用</label>

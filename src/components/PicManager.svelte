@@ -2,6 +2,8 @@
   import { onMount } from "svelte";
   import { db } from "../utils/db";
   import { Trash2, Edit3, Check, X, Search, Upload, GripVertical } from "lucide-svelte";
+  import { resolveAsset } from "../utils/assets";
+  import { getVersion } from "../utils/version";
 
   let { category, onSelect, onClose } = $props();
 
@@ -23,7 +25,7 @@
   async function loadData() {
     isLoading = true;
     try {
-      const response = await fetch("/data/index.json");
+      const response = await fetch(`/${getVersion()}/data/index.json`);
       const data = await response.json();
       if (category) {
         if (data && data[category]) vanillaPics = data[category].sort();
@@ -171,8 +173,8 @@
       {#if activeTab === "vanilla"}
         <div class="pic-grid">
           {#each paginatedItems as item}
-            <button class="pic-card" onclick={() => onSelect(item.includes("/") ? `/data/${item}` : `/data/${category}/${item}`)}>
-              <div class="img-box"><img src={item.includes("/") ? `/data/${item}` : `/data/${category}/${item}`} alt="" loading="lazy" /></div>
+            <button class="pic-card" onclick={() => onSelect(item.includes("/") ? `/${getVersion()}/data/${item}` : `/${getVersion()}/data/${category}/${item}`)}>
+              <div class="img-box"><img src={item.includes("/") ? `/${getVersion()}/data/${item}` : `/${getVersion()}/data/${category}/${item}`} alt="" loading="lazy" /></div>
               <p class="name" title={item as string}>{item.split("/").pop()}</p>
             </button>
           {/each}

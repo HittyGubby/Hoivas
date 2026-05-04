@@ -1,6 +1,6 @@
 <script lang="ts">
   import { BaseEdge, EdgeLabel, type EdgeProps } from "@xyflow/svelte";
-
+  import { getVersion } from "../utils/version";
   let { id, sourceX, sourceY, targetX, targetY, data }: EdgeProps = $props();
 
   const centerY = $derived((targetY - sourceY) / 2 + sourceY);
@@ -20,7 +20,7 @@
 
 {#if isExclusive}
   <EdgeLabel x={labelX} y={labelY} style="background:transparent">
-    <img class="exclusive-icon" src="/template/focus_link_exclusive.png" alt="exclusive" draggable={false} />
+    <img class="exclusive-icon" src={`/${getVersion()}/template/focus_link_exclusive.png`} alt="exclusive" draggable={false} />
   </EdgeLabel>
 {/if}
 
