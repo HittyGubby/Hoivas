@@ -57,6 +57,13 @@
         <li>国策树支持</li>
         <li>画板化重构</li>
       </ul>
+      <br />
+      <h3>敬请期待</h3>
+      <ul>
+        <li>Pax Brittanica</li>
+        <li>决议界面</li>
+        <li>甚至...地图？</li>
+      </ul>
     </div>
   </div>
 </div>

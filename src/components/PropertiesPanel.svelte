@@ -4,7 +4,14 @@
   import ImageListEditor from "./ImageListEditor.svelte";
   import RichTextEditor from "./RichTextEditor.svelte";
   import Modal from "./Modal.svelte";
-  import { Type, ImageIcon, PieChart as PieIcon, Settings, Trash2, Maximize } from "lucide-svelte";
+  import {
+    Type,
+    ImageIcon,
+    PieChart as PieIcon,
+    Settings,
+    Trash2,
+    Maximize,
+  } from "lucide-svelte";
 
   let { node, onDelete, focusEdges = [], onDeleteEdge = undefined } = $props();
 
@@ -43,9 +50,16 @@
   <div class="form-header">
     <div class="alias-group">
       <Settings size={12} />
-      <input type="text" bind:value={node.data.alias} placeholder="设置窗口别名..." class="alias-input" />
+      <input
+        type="text"
+        bind:value={node.data.alias}
+        placeholder="设置窗口别名..."
+        class="alias-input"
+      />
     </div>
-    <button class="delete-node-btn" onclick={onDelete} title="删除此窗口"><Trash2 size={14} /></button>
+    <button class="delete-node-btn" onclick={onDelete} title="删除此窗口"
+      ><Trash2 size={14} /></button
+    >
   </div>
 
   {#if node.type === "mainWindow"}
@@ -53,14 +67,20 @@
       <label>国家名称</label>
       <div class="input-group">
         <input type="text" bind:value={data.country} />
-        <button class="rich-trigger" onclick={() => openRichText("country", "编辑国家名称")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("country", "编辑国家名称")}>+</button
+        >
       </div>
     </div>
     <div class="section">
       <label>领袖姓名</label>
       <div class="input-group">
         <input type="text" bind:value={data.leaderName} />
-        <button class="rich-trigger" onclick={() => openRichText("leaderName", "编辑领袖姓名")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("leaderName", "编辑领袖姓名")}>+</button
+        >
       </div>
     </div>
 
@@ -68,44 +88,65 @@
       <label>阵营名称</label>
       <div class="input-group">
         <input type="text" bind:value={data.factionText} />
-        <button class="rich-trigger" onclick={() => openRichText("factionText", "编辑阵营名称")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("factionText", "编辑阵营名称")}>+</button
+        >
       </div>
     </div>
     <div class="section">
       <label>政党名称</label>
       <div class="input-group">
         <input type="text" bind:value={data.partyName} />
-        <button class="rich-trigger" onclick={() => openRichText("partyName", "编辑政党名称")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("partyName", "编辑政党名称")}>+</button
+        >
       </div>
     </div>
     <div class="section">
       <label>意识形态名称</label>
       <div class="input-group">
         <input type="text" bind:value={data.ideologyName} />
-        <button class="rich-trigger" onclick={() => openRichText("ideologyName", "编辑阵营名称")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("ideologyName", "编辑阵营名称")}>+</button
+        >
       </div>
     </div>
     <div class="section">
       <label>选举</label>
       <div class="input-group">
         <input type="text" bind:value={data.electionText} />
-        <button class="rich-trigger" onclick={() => openRichText("electionText", "编辑选举")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("electionText", "编辑选举")}>+</button
+        >
       </div>
     </div>
     <div class="section">
       <label>国策</label>
       <div class="input-group">
         <input type="text" bind:value={data.focusText} />
-        <button class="rich-trigger" onclick={() => openRichText("focusText", "编辑国策")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("focusText", "编辑国策")}>+</button
+        >
       </div>
     </div>
 
     <div class="section-row">
       <div class="sub-col">
-        <button class="editor-trigger secondary" onclick={() => openPicManager("leader", "leaderImg")}>更换头像</button>
+        <button
+          class="editor-trigger secondary"
+          onclick={() => openPicManager("leader", "leaderImg")}>更换头像</button
+        >
       </div>
       <div class="sub-col">
-        <button class="editor-trigger secondary" onclick={() => openPicManager("flag", "flagImg")}>更换国旗</button>
+        <button
+          class="editor-trigger secondary"
+          onclick={() => openPicManager("flag", "flagImg")}>更换国旗</button
+        >
       </div>
     </div>
 
@@ -113,11 +154,21 @@
     <div class="section icon-scale-row">
       <div class="sub-col">
         <label>意识形态图标</label>
-        <button class="editor-trigger secondary" onclick={() => openPicManager("ideology", "ideologyImg")}>更换意识形态图标</button>
+        <button
+          class="editor-trigger secondary"
+          onclick={() => openPicManager("ideology", "ideologyImg")}
+          >更换意识形态图标</button
+        >
       </div>
       <div class="sub-col narrow">
         <label>缩放</label>
-        <input type="number" step="0.1" bind:value={data.ideologyScale} placeholder="1.0" class="styled-input" />
+        <input
+          type="number"
+          step="0.1"
+          bind:value={data.ideologyScale}
+          placeholder="1.0"
+          class="styled-input"
+        />
       </div>
     </div>
 
@@ -125,11 +176,21 @@
     <div class="section icon-scale-row">
       <div class="sub-col">
         <label>阵营图标</label>
-        <button class="editor-trigger secondary" onclick={() => openPicManager("faction", "factionImg")}>更换阵营图标</button>
+        <button
+          class="editor-trigger secondary"
+          onclick={() => openPicManager("faction", "factionImg")}
+          >更换阵营图标</button
+        >
       </div>
       <div class="sub-col narrow">
         <label>缩放</label>
-        <input type="number" step="0.1" bind:value={data.factionScale} placeholder="1.0" class="styled-input" />
+        <input
+          type="number"
+          step="0.1"
+          bind:value={data.factionScale}
+          placeholder="1.0"
+          class="styled-input"
+        />
       </div>
     </div>
 
@@ -137,11 +198,21 @@
     <div class="section icon-scale-row">
       <div class="sub-col">
         <label>国策图标</label>
-        <button class="editor-trigger secondary" onclick={() => openPicManager("focus", "focusImg")}>更换国策图标</button>
+        <button
+          class="editor-trigger secondary"
+          onclick={() => openPicManager("focus", "focusImg")}
+          >更换国策图标</button
+        >
       </div>
       <div class="sub-col narrow">
         <label>缩放</label>
-        <input type="number" step="0.1" bind:value={data.focusScale} placeholder="0.9" class="styled-input" />
+        <input
+          type="number"
+          step="0.1"
+          bind:value={data.focusScale}
+          placeholder="0.9"
+          class="styled-input"
+        />
       </div>
     </div>
 
@@ -151,31 +222,47 @@
     </div>
 
     <div class="section">
-      <button class="editor-trigger" onclick={() => (showChartEditor = true)}>编辑饼图数据</button>
+      <button class="editor-trigger" onclick={() => (showChartEditor = true)}
+        >编辑饼图数据</button
+      >
     </div>
   {:else if node.type === "news" || node.type === "event"}
     <div class="section">
       <label>标题</label>
       <div class="input-group">
         <input type="text" bind:value={data.title} class="styled-input" />
-        <button class="rich-trigger" onclick={() => openRichText("title", "编辑标题")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("title", "编辑标题")}>+</button
+        >
       </div>
     </div>
     <div class="section">
-      <button class="editor-trigger secondary" onclick={() => openPicManager(node.type, node.type + "Img")}>更换图片</button>
+      <button
+        class="editor-trigger secondary"
+        onclick={() => openPicManager(node.type, node.type + "Img")}
+        >更换图片</button
+      >
     </div>
     <div class="section">
       <label>正文内容</label>
       <div class="input-group">
-        <textarea rows="4" bind:value={data.body} class="styled-input"></textarea>
-        <button class="rich-trigger" onclick={() => openRichText("body", "编辑正文内容")}>+</button>
+        <textarea rows="4" bind:value={data.body} class="styled-input"
+        ></textarea>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("body", "编辑正文内容")}>+</button
+        >
       </div>
     </div>
     <div class="section">
       <label>按钮文字</label>
       <div class="input-group">
         <input type="text" bind:value={data.buttonText} class="styled-input" />
-        <button class="rich-trigger" onclick={() => openRichText("buttonText", "编辑按钮文字")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("buttonText", "编辑按钮文字")}>+</button
+        >
       </div>
     </div>
   {:else if node.type === "super"}
@@ -183,42 +270,74 @@
       <label>标题</label>
       <div class="input-group">
         <input type="text" bind:value={data.title} class="styled-input" />
-        <button class="rich-trigger" onclick={() => openRichText("title", "编辑标题")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("title", "编辑标题")}>+</button
+        >
       </div>
     </div>
     <div class="section">
-      <button class="editor-trigger secondary" onclick={() => openPicManager("super", "superImg")}>更换背景图</button>
+      <button
+        class="editor-trigger secondary"
+        onclick={() => openPicManager("super", "superImg")}>更换背景图</button
+      >
     </div>
     <div class="section">
       <label>格言 / 引用</label>
       <div class="input-group">
-        <textarea rows="4" bind:value={data.motto} class="styled-input"></textarea>
-        <button class="rich-trigger" onclick={() => openRichText("motto", "编辑格言")}>+</button>
+        <textarea rows="4" bind:value={data.motto} class="styled-input"
+        ></textarea>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("motto", "编辑格言")}>+</button
+        >
+      </div>
+    </div>
+    <div class="section">
+      <label>按钮文字</label>
+      <div class="input-group">
+        <input type="text" bind:value={data.buttonText} class="styled-input" />
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("buttonText", "编辑按钮文字")}>+</button
+        >
       </div>
     </div>
   {:else if node.type === "spirit"}
     <div class="section">
-      <button class="editor-trigger" onclick={() => (showSpiritEditor = true)}>管理图标阵列</button>
+      <button class="editor-trigger" onclick={() => (showSpiritEditor = true)}
+        >管理图标阵列</button
+      >
     </div>
   {:else if node.type === "desc"}
     <div class="section">
       <label>正文内容</label>
       <div class="input-group">
-        <textarea rows="4" bind:value={data.body} class="styled-input"></textarea>
-        <button class="rich-trigger" onclick={() => openRichText("body", "编辑正文内容")}>+</button>
+        <textarea rows="4" bind:value={data.body} class="styled-input"
+        ></textarea>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("body", "编辑正文内容")}>+</button
+        >
       </div>
     </div>
   {:else if node.type === "text"}
     <div class="section">
       <label>文字内容</label>
       <div class="input-group">
-        <textarea rows="6" bind:value={data.body} class="styled-input"></textarea>
-        <button class="rich-trigger" onclick={() => openRichText("body", "高级编辑")}>+</button>
+        <textarea rows="6" bind:value={data.body} class="styled-input"
+        ></textarea>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("body", "高级编辑")}>+</button
+        >
       </div>
     </div>
   {:else if node.type === "image"}
     <div class="section">
-      <button class="editor-trigger" onclick={() => openPicManager("", "url")}>选择图片</button>
+      <button class="editor-trigger" onclick={() => openPicManager("", "url")}
+        >选择图片</button
+      >
     </div>
     <div class="section">
       <label>填充方式</label>
@@ -230,18 +349,26 @@
     </div>
   {:else if node.type === "pie"}
     <div class="section">
-      <button class="editor-trigger" onclick={() => (showChartEditor = true)}>配置独立饼图</button>
+      <button class="editor-trigger" onclick={() => (showChartEditor = true)}
+        >配置独立饼图</button
+      >
     </div>
   {:else if node.type === "focus"}
     <div class="section">
       <label>国策名称</label>
       <div class="input-group">
         <input type="text" bind:value={data.label} class="styled-input" />
-        <button class="rich-trigger" onclick={() => openRichText("label", "编辑国策名称")}>+</button>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("label", "编辑国策名称")}>+</button
+        >
       </div>
     </div>
     <div class="section">
-      <button class="editor-trigger secondary" onclick={() => openPicManager("focus", "icon")}>更换图标</button>
+      <button
+        class="editor-trigger secondary"
+        onclick={() => openPicManager("focus", "icon")}>更换图标</button
+      >
     </div>
     <div class="section">
       <label>状态</label>
@@ -252,11 +379,29 @@
       </select>
     </div>
     {#if focusEdges.length > 0}
-      {@const nodeEdges = focusEdges.filter((e: any) => e.source === node.id || e.target === node.id)}
-      {@const topEdges = nodeEdges.filter((e: any) => (e.source === node.id && e.sourceHandle === "top") || (e.target === node.id && e.targetHandle === "top"))}
-      {@const bottomEdges = nodeEdges.filter((e: any) => (e.source === node.id && e.sourceHandle === "bottom") || (e.target === node.id && e.targetHandle === "bottom"))}
-      {@const leftEdges = nodeEdges.filter((e: any) => (e.source === node.id && e.sourceHandle === "left") || (e.target === node.id && e.targetHandle === "left"))}
-      {@const rightEdges = nodeEdges.filter((e: any) => (e.source === node.id && e.sourceHandle === "right") || (e.target === node.id && e.targetHandle === "right"))}
+      {@const nodeEdges = focusEdges.filter(
+        (e: any) => e.source === node.id || e.target === node.id,
+      )}
+      {@const topEdges = nodeEdges.filter(
+        (e: any) =>
+          (e.source === node.id && e.sourceHandle === "top") ||
+          (e.target === node.id && e.targetHandle === "top"),
+      )}
+      {@const bottomEdges = nodeEdges.filter(
+        (e: any) =>
+          (e.source === node.id && e.sourceHandle === "bottom") ||
+          (e.target === node.id && e.targetHandle === "bottom"),
+      )}
+      {@const leftEdges = nodeEdges.filter(
+        (e: any) =>
+          (e.source === node.id && e.sourceHandle === "left") ||
+          (e.target === node.id && e.targetHandle === "left"),
+      )}
+      {@const rightEdges = nodeEdges.filter(
+        (e: any) =>
+          (e.source === node.id && e.sourceHandle === "right") ||
+          (e.target === node.id && e.targetHandle === "right"),
+      )}
       <div class="edge-section">
         <span class="edge-title">连线</span>
         {#each [{ handle: "上", edges: topEdges }, { handle: "下", edges: bottomEdges }, { handle: "左", edges: leftEdges }, { handle: "右", edges: rightEdges }] as group}
@@ -264,12 +409,21 @@
             <div class="handle-group">
               <span class="handle-label">{group.handle}</span>
               {#each group.edges as edge}
-                {@const edgeData = edge.data ?? { dashed: false, exclusive: false, completed: false }}
+                {@const edgeData = edge.data ?? {
+                  dashed: false,
+                  exclusive: false,
+                  completed: false,
+                }}
                 <div class="edge-item">
                   <select
                     value={edgeData.dashed ? "true" : "false"}
                     onchange={(e) => {
-                      if (!edge.data) edge.data = { dashed: false, exclusive: false, completed: false };
+                      if (!edge.data)
+                        edge.data = {
+                          dashed: false,
+                          exclusive: false,
+                          completed: false,
+                        };
                       edge.data.dashed = e.currentTarget.value === "true";
                     }}
                     class="edge-style-select"
@@ -282,7 +436,12 @@
                       type="checkbox"
                       checked={edgeData.exclusive}
                       onchange={(e) => {
-                        if (!edge.data) edge.data = { dashed: false, exclusive: false, completed: false };
+                        if (!edge.data)
+                          edge.data = {
+                            dashed: false,
+                            exclusive: false,
+                            completed: false,
+                          };
                         edge.data.exclusive = e.currentTarget.checked;
                       }}
                     />
@@ -293,13 +452,22 @@
                       type="checkbox"
                       checked={edgeData.completed}
                       onchange={(e) => {
-                        if (!edge.data) edge.data = { dashed: false, exclusive: false, completed: false };
+                        if (!edge.data)
+                          edge.data = {
+                            dashed: false,
+                            exclusive: false,
+                            completed: false,
+                          };
                         edge.data.completed = e.currentTarget.checked;
                       }}
                     />
                     已完成
                   </label>
-                  <button class="delete-node-btn" onclick={() => onDeleteEdge?.(edge.id)} title="删除"><Trash2 size={12} /></button>
+                  <button
+                    class="delete-node-btn"
+                    onclick={() => onDeleteEdge?.(edge.id)}
+                    title="删除"><Trash2 size={12} /></button
+                  >
                 </div>
               {/each}
             </div>
@@ -320,8 +488,15 @@
     </Modal>
   {/if}
 
-  <Modal title="图片管理器 - {currentPicCategory || '全选'}" bind:isOpen={showPicManager}>
-    <PicManager category={currentPicCategory} onSelect={handlePicSelect} onClose={() => (showPicManager = false)} />
+  <Modal
+    title="图片管理器 - {currentPicCategory || '全选'}"
+    bind:isOpen={showPicManager}
+  >
+    <PicManager
+      category={currentPicCategory}
+      onSelect={handlePicSelect}
+      onClose={() => (showPicManager = false)}
+    />
   </Modal>
 
   <Modal title="图标管理器" bind:isOpen={showSpiritEditor} width="80vw">

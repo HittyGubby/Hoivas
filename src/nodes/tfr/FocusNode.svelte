@@ -32,7 +32,7 @@
     {/if}
     {#if data.label}
       <div class="label-wrapper">
-        <span class="label">{data.label}</span>
+        <span class="label">{@html data.label}</span>
       </div>
     {/if}
   </div>

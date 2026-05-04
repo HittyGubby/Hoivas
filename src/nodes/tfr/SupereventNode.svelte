@@ -22,7 +22,7 @@
 
     <!-- Title -->
     <div class="super-title-box">
-      <p class="super-title">{data.title}</p>
+      <p class="super-title">{@html data.title}</p>
     </div>
 
     <!-- Motto/Quote -->

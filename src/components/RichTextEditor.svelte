@@ -15,7 +15,7 @@
 
   function unwrap(html: string) {
     //strip eall surrounding p tags and double br tags
-    return html.replace(/<\/p><p>/g, "<br>").replace(/^<p>|<\/p>$/g, "");
+    return html.replace(/<\/p><p>/gi, "<br>").replace(/^<p>|<\/p>$/g, "").replace(/<br><br>/gi, "<br>");
   }
 
   onMount(() => {
@@ -48,7 +48,7 @@
 
     quill.on("text-change", () => {
       internalChange = true;
-      content = unwrap(quill.root.innerHTML);
+      content = quill.root.innerHTML;
       setTimeout(() => {
         internalChange = false;
       }, 0);
@@ -57,7 +57,7 @@
 
   $effect(() => {
     if (quill && !internalChange) {
-      const wrapped = unwrap(content);
+      const wrapped = content;
       if (wrapped !== quill.root.innerHTML) {
         quill.root.innerHTML = wrapped;
       }

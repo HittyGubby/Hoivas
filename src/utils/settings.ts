@@ -9,7 +9,7 @@ export interface GlobalSettings {
 export const globalSettings = writable<GlobalSettings>({
   bgColor: "#121212",
   themeColor: "#ff0071",
-  exportScale: 2
+  exportScale: 2,
 });
 
 // Load from localStorage if available
@@ -22,7 +22,7 @@ if (saved) {
   }
 }
 
-globalSettings.subscribe(value => {
+globalSettings.subscribe((value) => {
   localStorage.setItem("hoivas-settings", JSON.stringify(value));
   document.documentElement.style.setProperty("--theme-color", value.themeColor);
 });

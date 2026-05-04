@@ -31,7 +31,7 @@
 
     <!-- Title -->
     <div class="news-title-container">
-      <p class="news-title">{data.title}</p>
+      <p class="news-title">{@html data.title}</p>
     </div>
 
     <!-- Body Text -->
@@ -39,7 +39,7 @@
 
     <!-- Button -->
     <button class="news-button">
-      {data.buttonText || "帝国的终结。"}
+      {@html data.buttonText || "帝国的终结。"}
     </button>
   </div>
 </div>

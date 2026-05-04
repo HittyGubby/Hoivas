@@ -1,7 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { db } from "../utils/db";
-  import { Trash2, Edit3, Check, X, Search, Upload, GripVertical } from "lucide-svelte";
+  import {
+    Trash2,
+    Edit3,
+    Check,
+    X,
+    Search,
+    Upload,
+    GripVertical,
+  } from "lucide-svelte";
   import { resolveAsset } from "../utils/assets";
   import { getVersion } from "../utils/version";
 
@@ -33,7 +41,10 @@
       } else {
         let allVanilla: string[] = [];
         for (const cat in data) {
-          allVanilla = [...allVanilla, ...data[cat].map((p: string) => `${cat}/${p}`)];
+          allVanilla = [
+            ...allVanilla,
+            ...data[cat].map((p: string) => `${cat}/${p}`),
+          ];
         }
         vanillaPics = allVanilla.sort();
         customPics = await db.getAllCustomPics("");
@@ -46,10 +57,13 @@
   }
 
   onMount(loadData);
-
   let filteredVanilla = $derived(
     vanillaPics.filter((p) => {
-      const terms = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      const terms = searchQuery
+        .toLowerCase()
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
       if (terms.length === 0) return true;
       const lower = p.toLowerCase();
       return terms.every((t) => lower.includes(t));
@@ -57,15 +71,26 @@
   );
   let filteredCustom = $derived(
     customPics.filter((p) => {
-      const terms = searchQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      const terms = searchQuery
+        .toLowerCase()
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
       if (terms.length === 0) return true;
       const lower = p.filename.toLowerCase();
       return terms.every((t) => lower.includes(t));
     }),
   );
-  let currentList = $derived(activeTab === "vanilla" ? filteredVanilla : filteredCustom);
+  let currentList = $derived(
+    activeTab === "vanilla" ? filteredVanilla : filteredCustom,
+  );
   let totalPages = $derived(Math.ceil(currentList.length / ITEMS_PER_PAGE));
-  let paginatedItems = $derived(currentList.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE));
+  let paginatedItems = $derived(
+    currentList.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE,
+    ),
+  );
 
   $effect(() => {
     searchQuery;
@@ -148,20 +173,42 @@
 <div class="pic-manager">
   <header class="manager-header">
     <div class="tabs">
-      <button class:active={activeTab === "vanilla"} onclick={() => (activeTab = "vanilla")}>内置素材 ({vanillaPics.length})</button>
-      <button class:active={activeTab === "custom"} onclick={() => (activeTab = "custom")}>我的上传 ({customPics.length})</button>
+      <button
+        class:active={activeTab === "vanilla"}
+        onclick={() => (activeTab = "vanilla")}
+        >内置素材 ({vanillaPics.length})</button
+      >
+      <button
+        class:active={activeTab === "custom"}
+        onclick={() => (activeTab = "custom")}
+        >我的上传 ({customPics.length})</button
+      >
     </div>
 
     <div class="actions">
       {#if activeTab === "custom"}
         {#if selectedIds.size > 0}
-          <button class="batch-del-btn" onclick={deleteSelected}><Trash2 size={14} /> 删除选中 ({selectedIds.size})</button>
+          <button class="batch-del-btn" onclick={deleteSelected}
+            ><Trash2 size={14} /> 删除选中 ({selectedIds.size})</button
+          >
         {/if}
-        <label class="upload-btn">上传<input type="file" multiple accept="image/*" onchange={handleUpload} style="display: none;" /></label>
+        <label class="upload-btn"
+          >上传<input
+            type="file"
+            multiple
+            accept="image/*"
+            onchange={handleUpload}
+            style="display: none;"
+          /></label
+        >
       {/if}
       <div class="search-box">
         <Search size={14} />
-        <input type="text" bind:value={searchQuery} placeholder="搜索图片（空格分割关键词）" />
+        <input
+          type="text"
+          bind:value={searchQuery}
+          placeholder="搜索图片（空格分割关键词）"
+        />
       </div>
     </div>
   </header>
@@ -173,8 +220,24 @@
       {#if activeTab === "vanilla"}
         <div class="pic-grid">
           {#each paginatedItems as item}
-            <button class="pic-card" onclick={() => onSelect(item.includes("/") ? `/${getVersion()}/data/${item}` : `/${getVersion()}/data/${category}/${item}`)}>
-              <div class="img-box"><img src={item.includes("/") ? `/${getVersion()}/data/${item}` : `/${getVersion()}/data/${category}/${item}`} alt="" loading="lazy" /></div>
+            <button
+              class="pic-card"
+              onclick={() =>
+                onSelect(
+                  item.includes("/")
+                    ? `/${getVersion()}/data/${item}`
+                    : `/${getVersion()}/data/${category}/${item}`,
+                )}
+            >
+              <div class="img-box">
+                <img
+                  src={item.includes("/")
+                    ? `/${getVersion()}/data/${item}`
+                    : `/${getVersion()}/data/${category}/${item}`}
+                  alt=""
+                  loading="lazy"
+                />
+              </div>
               <p class="name" title={item as string}>{item.split("/").pop()}</p>
             </button>
           {/each}
@@ -195,21 +258,36 @@
               ondrop={() => handleDrop(item.id)}
               onclick={() => onSelect(item.url)}
             >
-              <div class="item-drag" onclick={(e) => e.stopPropagation()}><GripVertical size={16} /></div>
+              <div class="item-drag" onclick={(e) => e.stopPropagation()}>
+                <GripVertical size={16} />
+              </div>
               <div class="item-check" onclick={(e) => toggleSelect(item.id, e)}>
-                <div class="check-box" class:checked={selectedIds.has(item.id)}></div>
+                <div
+                  class="check-box"
+                  class:checked={selectedIds.has(item.id)}
+                ></div>
               </div>
               <div class="item-preview"><img src={item.url} alt="" /></div>
               <div class="item-info">
                 {#if editingId === item.id}
                   <div class="edit-row" onclick={(e) => e.stopPropagation()}>
-                    <input type="text" bind:value={editName} onkeydown={(e) => e.key === "Enter" && saveRename()} />
-                    <button class="save" onclick={saveRename}><Check size={14} /></button>
-                    <button class="cancel" onclick={() => (editingId = null)}><X size={14} /></button>
+                    <input
+                      type="text"
+                      bind:value={editName}
+                      onkeydown={(e) => e.key === "Enter" && saveRename()}
+                    />
+                    <button class="save" onclick={saveRename}
+                      ><Check size={14} /></button
+                    >
+                    <button class="cancel" onclick={() => (editingId = null)}
+                      ><X size={14} /></button
+                    >
                   </div>
                 {:else}
                   <span class="filename">{item.filename}</span>
-                  <span class="filesize">{(item.size / 1024).toFixed(1)} KB</span>
+                  <span class="filesize"
+                    >{(item.size / 1024).toFixed(1)} KB</span
+                  >
                 {/if}
               </div>
               <div class="item-actions">
@@ -238,9 +316,22 @@
 
     {#if activeTab === "vanilla" && totalPages > 1}
       <footer class="pagination">
-        <button disabled={currentPage === 1} onclick={() => currentPage--}>上一页</button>
-        <div class="page-info">第 <input type="number" bind:value={currentPage} min="1" max={totalPages} /> / {totalPages} 页</div>
-        <button disabled={currentPage === totalPages} onclick={() => currentPage++}>下一页</button>
+        <button disabled={currentPage === 1} onclick={() => currentPage--}
+          >上一页</button
+        >
+        <div class="page-info">
+          第 <input
+            type="number"
+            bind:value={currentPage}
+            min="1"
+            max={totalPages}
+          />
+          / {totalPages} 页
+        </div>
+        <button
+          disabled={currentPage === totalPages}
+          onclick={() => currentPage++}>下一页</button
+        >
       </footer>
     {/if}
   {/if}

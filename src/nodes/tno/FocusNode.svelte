@@ -32,7 +32,7 @@
     {/if}
     {#if data.label}
       <div class="label-wrapper">
-        <span class="label">{data.label}</span>
+        <span class="label">{@html data.label}</span>
       </div>
     {/if}
   </div>
@@ -86,7 +86,7 @@
   }
 
   .label {
-    font-family: "Cubic", "FZRui", sans-serif;
+    font-family: "Aldrich", "FZRui", sans-serif;
     font-size: 11px;
     color: #ffffff;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);

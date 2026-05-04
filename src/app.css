@@ -60,3 +60,7 @@ main {
 input {
   accent-color: var(--theme-color);
 }
+
+p {
+  margin: 0;
+}

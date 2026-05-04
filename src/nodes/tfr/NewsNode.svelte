@@ -22,7 +22,7 @@
 
     <!-- Title -->
     <div class="news-title-box">
-      <p class="news-title">{data.title}</p>
+      <p class="news-title">{@html data.title}</p>
     </div>
 
     <!-- Body Text -->
@@ -31,7 +31,7 @@
     </div>
     <!-- Button -->
     <button class="news-button">
-      {data.buttonText || "Understood."}
+      {@html data.buttonText}
     </button>
   </div>
 </div>

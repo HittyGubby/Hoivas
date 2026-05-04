@@ -1,7 +1,12 @@
 import JSZip from "jszip";
 import { db } from "./db";
 
-export async function exportProjectToZip(nodes: any[], config: { bgColor: string; themeColor: string; exportScale: number }, focusNodes: any[] = [], focusEdges: any[] = []) {
+export async function exportProjectToZip(
+  nodes: any[],
+  config: { bgColor: string; themeColor: string; exportScale: number },
+  focusNodes: any[] = [],
+  focusEdges: any[] = [],
+) {
   const zip = new JSZip();
   const assetsFolder = zip.folder("assets");
   const assetMap = new Map<string, string>();
@@ -28,7 +33,8 @@ export async function exportProjectToZip(nodes: any[], config: { bgColor: string
     try {
       const picInfo = await db.getCustomPicByUrl(url);
       if (picInfo) {
-        const originalFilename = picInfo.filename.replace(/\.[^.]+$/, "") || "custom";
+        const originalFilename =
+          picInfo.filename.replace(/\.[^.]+$/, "") || "custom";
         const ext = picInfo.blob.type.split("/")[1] || "png";
         const filename = getUniqueFilename(originalFilename, ext);
         assetsFolder?.file(filename, picInfo.blob);
@@ -44,7 +50,17 @@ export async function exportProjectToZip(nodes: any[], config: { bgColor: string
 
   const nodesToExport = JSON.parse(JSON.stringify(nodes));
   for (const node of nodesToExport) {
-    const keys = ["leaderImg", "flagImg", "ideologyImg", "factionImg", "focusImg", "newsImg", "eventImg", "superImg", "url"];
+    const keys = [
+      "leaderImg",
+      "flagImg",
+      "ideologyImg",
+      "factionImg",
+      "focusImg",
+      "newsImg",
+      "eventImg",
+      "superImg",
+      "url",
+    ];
     for (const k of keys) {
       if (node.data && node.data[k]) {
         node.data[k] = await processImage(node.data[k]);
@@ -65,6 +81,18 @@ export async function exportProjectToZip(nodes: any[], config: { bgColor: string
     }
   }
 
-  zip.file("project.json", JSON.stringify({ nodes: nodesToExport, focusNodes: focusNodesToExport, focusEdges, config }, null, 2));
+  zip.file(
+    "project.json",
+    JSON.stringify(
+      {
+        nodes: nodesToExport,
+        focusNodes: focusNodesToExport,
+        focusEdges,
+        config,
+      },
+      null,
+      2,
+    ),
+  );
   return await zip.generateAsync({ type: "blob" });
 }

@@ -450,7 +450,7 @@
       bind:edges={focusEdges}
       {nodeTypes}
       {edgeTypes}
-      initialViewport={{ zoom: 1, x: 50, y: 50 }}
+      initialViewport={{ zoom: 40, x: 50, y: 50 }}
       snapGrid={[10, 10]}
       defaultEdgeOptions={{ type: "focusStep", data: { dashed: false, exclusive: false, completed: false } }}
       fitView

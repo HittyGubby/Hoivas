@@ -9,12 +9,21 @@ export function resolveAsset(path: string, version: string | null): string {
   if (!version) return path;
 
   // If already prefixed or external, return as is
-  if (path.startsWith(`/${version}/`) || path.startsWith("http") || path.startsWith("blob:") || path.startsWith("data:")) {
+  if (
+    path.startsWith(`/${version}/`) ||
+    path.startsWith("http") ||
+    path.startsWith("blob:") ||
+    path.startsWith("data:")
+  ) {
     return path;
   }
 
   // Prefix relevant paths
-  if (path.startsWith("/preset") || path.startsWith("/template") || path.startsWith("/data")) {
+  if (
+    path.startsWith("/preset") ||
+    path.startsWith("/template") ||
+    path.startsWith("/data")
+  ) {
     return `/${version}${path}`;
   }
 

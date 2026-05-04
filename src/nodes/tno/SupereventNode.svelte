@@ -31,7 +31,7 @@
 
     <!-- Title -->
     <div class="super-title-box">
-      <p class="super-title">{data.title}</p>
+      <p class="super-title">{@html data.title}</p>
     </div>
 
     <!-- Motto/Quote -->
@@ -41,7 +41,7 @@
 
     <!-- Button -->
     <button class="super-button">
-      {data.buttonText}
+      {@html data.buttonText}
     </button>
   </div>
 </div>
