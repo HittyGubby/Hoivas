@@ -216,14 +216,23 @@ export class AppDatabase {
     });
   }
 
-  async saveProject(name: string, nodes: any[], config?: any) {
+  async saveProject(
+    name: string,
+    nodes: any[],
+    focusNodes: any[] = [],
+    focusEdges: any[] = [],
+    config?: any,
+  ) {
     const db = await this.init();
     const serializedNodes = await this.serializeBlobUrls(nodes);
+    const serializedFocusNodes = await this.serializeBlobUrls(focusNodes);
     return new Promise((resolve) => {
       const transaction = db.transaction(["projects"], "readwrite");
       transaction.objectStore("projects").put({
         name,
         nodes: serializedNodes,
+        focusNodes: serializedFocusNodes,
+        focusEdges: JSON.parse(JSON.stringify(focusEdges)),
         config: config || {},
         timestamp: new Date(),
       });
@@ -239,11 +248,11 @@ export class AppDatabase {
         .objectStore("projects")
         .getAll();
       request.onsuccess = async () => {
-        const results = request.result.sort(
-          (a: any, b: any) => b.timestamp - a.timestamp,
-        );
+        const results = request.result || [];
         for (const p of results) {
           if (p.nodes) p.nodes = await this.deserializeBlobUrls(p.nodes);
+          if (p.focusNodes)
+            p.focusNodes = await this.deserializeBlobUrls(p.focusNodes);
         }
         resolve(results);
       };

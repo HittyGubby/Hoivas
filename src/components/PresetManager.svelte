@@ -5,7 +5,14 @@
   import { Trash2, RotateCcw, Save, FileJson, Clock, Download, Upload } from "lucide-svelte";
   import { exportProjectToZip } from "../utils/exportUtils";
 
-  let { nodes = $bindable(), config = {}, onLoaded, onConfigLoad } = $props();
+  let {
+    nodes = $bindable(),
+    focusNodes = $bindable([]),
+    focusEdges = $bindable([]),
+    config = {},
+    onLoaded,
+    onConfigLoad,
+  } = $props();
   let projects = $state<any[]>([]);
   let newName = $state("");
   let isExporting = $state(false);
@@ -18,7 +25,7 @@
 
   async function handleSave() {
     if (!newName) return;
-    await db.saveProject(newName, nodes, config);
+    await db.saveProject(newName, nodes, focusNodes, focusEdges, config);
     newName = "";
     await refresh();
   }
@@ -26,6 +33,8 @@
   async function handleLoad(p: any) {
     if (confirm(`载入项目 "${p.name}"？这会覆盖当前画布。`)) {
       nodes = JSON.parse(JSON.stringify(p.nodes));
+      focusNodes = JSON.parse(JSON.stringify(p.focusNodes || []));
+      focusEdges = JSON.parse(JSON.stringify(p.focusEdges || []));
       if (p.config && onConfigLoad) onConfigLoad(p.config);
       onLoaded?.();
     }
@@ -47,8 +56,12 @@
         themeColor: p.config?.themeColor || "#ff0071",
         exportScale: p.config?.exportScale || 2,
       };
-
-      const blob = await exportProjectToZip(p.nodes, cfg);
+      const blob = await exportProjectToZip(
+        p.nodes,
+        cfg,
+        p.focusNodes || [],
+        p.focusEdges || [],
+      );
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -113,9 +126,20 @@
         }
       }
 
+      const focusNodesToImport = projectData.focusNodes || [];
+      for (const node of focusNodesToImport) {
+        if (node.data?.icon) node.data.icon = await restoreImage(node.data.icon);
+      }
+
       // Save as a new project
       const name = file.name.replace(/\.zip$/, "");
-      await db.saveProject(name, nodesToImport, projectData.config || {});
+      await db.saveProject(
+        name,
+        nodesToImport,
+        focusNodesToImport,
+        projectData.focusEdges || [],
+        projectData.config || {},
+      );
       await refresh();
     } catch (err: any) {
       alert("导入失败: " + err.message);

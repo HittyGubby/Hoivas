@@ -13,23 +13,43 @@
 </script>
 
 {#if selected}
-  <NodeResizer minWidth={200} color="var(--theme-color)" keepAspectRatio={true} />
+  <NodeResizer
+    minWidth={200}
+    color="var(--theme-color)"
+    keepAspectRatio={true}
+  />
 {/if}
 
-<div class="main-scaler" style:transform="scale({scale})" style:width="{BASE_WIDTH}px">
+<div
+  class="main-scaler"
+  style:transform="scale({scale})"
+  style:width="{BASE_WIDTH}px"
+>
   <div class="main-window-container">
     <!-- Flag Section -->
     <div class="flag-box">
       <img src={data.flagImg} class="fill-img" alt="" />
-      <img src={"/tno/template/flag_overlay.png"} class="fill-img overlay-flag" alt="" />
+      <img
+        src={"/tno/template/flag_overlay.png"}
+        class="fill-img overlay-flag"
+        alt=""
+      />
     </div>
 
     <!-- Leader Section -->
     <div class="leader-box">
-      <img src={"/tno/template/Leader_Background.png"} class="fill-img" alt="" />
+      <img
+        src={"/tno/template/Leader_Background.png"}
+        class="fill-img"
+        alt=""
+      />
       <img src={data.leaderImg} class="fill-img" alt="" />
     </div>
-    <img src={"/tno/template/diplo_leader_frame.png"} class="leader-frame" alt="" />
+    <img
+      src={"/tno/template/diplo_leader_frame.png"}
+      class="leader-frame"
+      alt=""
+    />
     <!-- UI Background Frames -->
     <img src={"/tno/template/diplo_upper_win_bg.png"} class="upper-bg" alt="" />
 
@@ -42,10 +62,20 @@
 
     <!-- Icons -->
     <div class="ideology-icon-container">
-      <img src={data.ideologyImg} style:transform="scale({data.ideologyScale || 1})" class="contain-img" alt="" />
+      <img
+        src={data.ideologyImg}
+        style:transform="scale({data.ideologyScale || 1})"
+        class="contain-img"
+        alt=""
+      />
     </div>
     <div class="faction-icon-container">
-      <img src={data.factionImg} style:transform="scale({data.factionScale || 0.8})" class="contain-img" alt="" />
+      <img
+        src={data.factionImg}
+        style:transform="scale({data.factionScale || 0.8})"
+        class="contain-img"
+        alt=""
+      />
     </div>
 
     <!-- Pie Chart -->
@@ -54,7 +84,11 @@
       <div class="pie-wrapper">
         <PieChart data={data.chartData} />
       </div>
-      <img src={"/tno/template/pol_piechart_overlay_63x63.png"} class="pie-overlay" alt="" />
+      <img
+        src={"/tno/template/pol_piechart_overlay_63x63.png"}
+        class="pie-overlay"
+        alt=""
+      />
     </div>
 
     <!-- Party Info (Mid) -->
@@ -66,13 +100,31 @@
 
     <!-- Focus Section (Bottom) -->
     <div class="focus-icon-container">
-      <img src={data.focusImg} style:transform="scale({data.focusScale || 0.9})" class="focus-img" alt="" />
+      <img
+        src={data.focusImg}
+        style:transform="scale({data.focusScale || 0.9})"
+        class="focus-img"
+        alt=""
+      />
     </div>
     <div class="focus-progress-container">
-      <img src={"/tno/template/pol_goal_progress_frame.png"} class="progress-frame" alt="" />
-      <img src={"/tno/template/diplo_goal_button.png"} class="goal-btn" alt="" />
+      <img
+        src={"/tno/template/pol_goal_progress_frame.png"}
+        class="progress-frame"
+        alt=""
+      />
+      <img
+        src={"/tno/template/diplo_goal_button.png"}
+        class="goal-btn"
+        alt=""
+      />
       <div class="progress-bar-clip" style:width="{data.progress || 0}px">
-        <img src={"/tno/template/pol_goal_progress.png"} style:width="235px" style:height="5px" alt="" />
+        <img
+          src={"/tno/template/pol_goal_progress.png"}
+          style:width="235px"
+          style:height="5px"
+          alt=""
+        />
       </div>
     </div>
     <div class="focus-text-container">
@@ -114,10 +166,10 @@
 
   .flag-box {
     position: absolute;
-    top: 13px;
-    left: 22px;
+    top: 15px;
+    left: 25px;
     width: 85px;
-    height: 55px;
+    height: 52px;
     z-index: 10;
   }
   .overlay-flag {

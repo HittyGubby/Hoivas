@@ -127,14 +127,24 @@
 
   let saveTimeout: any;
   $effect(() => {
-    if (nodes.length > 0 || focusNodes.length > 0) {
+    // Synchronously access state to track deep changes
+    const nodesData = $state.snapshot(nodes);
+    const focusNodesData = $state.snapshot(focusNodes);
+    const focusEdgesData = $state.snapshot(focusEdges);
+    const configData = {
+      bgColor: $globalSettings.bgColor,
+      themeColor: $globalSettings.themeColor,
+      exportScale: $globalSettings.exportScale,
+    };
+
+    if (nodesData.length > 0 || focusNodesData.length > 0) {
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(() => {
         db.saveAutosave({
-          nodes,
-          focusNodes,
-          focusEdges,
-          config: { bgColor: $globalSettings.bgColor, themeColor: $globalSettings.themeColor, exportScale: $globalSettings.exportScale },
+          nodes: nodesData,
+          focusNodes: focusNodesData,
+          focusEdges: focusEdgesData,
+          config: configData,
         });
       }, 1000);
     }
@@ -283,6 +293,10 @@
         }
       }
 
+      for (const node of projectData.focusNodes || []) {
+        if (node.data.icon) node.data.icon = await restoreImage(node.data.icon);
+      }
+
       nodes = nodesToImport;
       focusNodes = projectData.focusNodes || [];
       focusEdges = projectData.focusEdges || [];
@@ -422,6 +436,8 @@
   <Modal title="本地存档管理" bind:isOpen={showPresets} width="600px">
     <PresetManager
       bind:nodes
+      bind:focusNodes
+      bind:focusEdges
       config={{ bgColor: $globalSettings.bgColor, themeColor: $globalSettings.themeColor, exportScale: $globalSettings.exportScale }}
       onLoaded={() => (showPresets = false)}
       onConfigLoad={(c: any) => {
