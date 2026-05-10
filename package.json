@@ -26,6 +26,8 @@
     "lucide-svelte": "^1.0.1",
     "quill": "^2.0.3",
     "selecto": "^1.26.3",
+    "source-map": "^0.7.6",
+    "source-map-js": "^1.2.1",
     "svelte-chartjs": "^4.0.1",
     "svelte-moveable": "^0.45.0",
     "svelte-selecto": "^1.26.3"

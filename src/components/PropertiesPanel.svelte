@@ -24,6 +24,8 @@
   let showRichTextEditor = $state(false);
   let richTextTargetKey = $state("");
   let richTextTitle = $state("");
+  let richTextArrayIndex = $state(-1); // -1 means not editing an array item
+  let richTextArrayContent = $state("");
 
   let showPicManager = $state(false);
   let currentPicCategory = $state("");
@@ -32,8 +34,39 @@
   function openRichText(key: string, title: string) {
     richTextTargetKey = key;
     richTextTitle = title;
+    richTextArrayIndex = -1;
     showRichTextEditor = true;
   }
+
+  function openRichTextArray(key: string, index: number, title: string) {
+    richTextTargetKey = key;
+    richTextArrayIndex = index;
+    const arr = data[key];
+    richTextArrayContent = Array.isArray(arr) ? (arr[index] ?? "") : "";
+    richTextTitle = title;
+    showRichTextEditor = true;
+  }
+
+  function closeRichText() {
+    if (richTextArrayIndex >= 0) {
+      const arr = data[richTextTargetKey];
+      if (Array.isArray(arr) && richTextArrayIndex < arr.length) {
+        arr[richTextArrayIndex] = richTextArrayContent;
+      }
+    }
+    showRichTextEditor = false;
+  }
+
+  // Sync array content back when rich text editor closes
+  $effect(() => {
+    if (!showRichTextEditor && richTextArrayIndex >= 0) {
+      const arr = data[richTextTargetKey];
+      if (Array.isArray(arr) && richTextArrayIndex < arr.length) {
+        arr[richTextArrayIndex] = richTextArrayContent;
+      }
+      richTextArrayIndex = -1;
+    }
+  });
 
   function openPicManager(category: string, key: string) {
     currentPicCategory = category;
@@ -304,13 +337,47 @@
     </div>
     <div class="section">
       <label>按钮文字</label>
-      <div class="input-group">
-        <input type="text" bind:value={data.buttonText} class="styled-input" />
-        <button
-          class="rich-trigger"
-          onclick={() => openRichText("buttonText", "编辑按钮文字")}>+</button
-        >
-      </div>
+      {#each Array.isArray(data.buttonText) ? data.buttonText : data.buttonText != null ? [data.buttonText] : [] as btn, i}
+        <div class="input-group button-item">
+          <input
+            type="text"
+            bind:value={data.buttonText[i]}
+            class="styled-input"
+            placeholder="按钮 {i + 1}"
+          />
+          <button
+            class="rich-trigger"
+            onclick={() =>
+              openRichTextArray("buttonText", i, `编辑按钮文字 ${i + 1}`)}
+            >+</button
+          >
+          {#if (Array.isArray(data.buttonText) ? data.buttonText.length : 1) > 1}
+            <button
+              class="remove-btn"
+              onclick={() => {
+                const arr = Array.isArray(data.buttonText)
+                  ? [...data.buttonText]
+                  : [data.buttonText];
+                arr.splice(i, 1);
+                data.buttonText = arr;
+              }}
+              title="删除此按钮">✕</button
+            >
+          {/if}
+        </div>
+      {/each}
+      <button
+        class="add-btn"
+        onclick={() => {
+          const arr = Array.isArray(data.buttonText)
+            ? [...data.buttonText]
+            : data.buttonText != null
+              ? [data.buttonText]
+              : [];
+          arr.push("");
+          data.buttonText = arr;
+        }}>+ 添加按钮</button
+      >
     </div>
   {:else if node.type === "super"}
     <div class="section">
@@ -555,7 +622,11 @@
 
   {#if showRichTextEditor}
     <Modal title={richTextTitle} bind:isOpen={showRichTextEditor} width="800px">
-      <RichTextEditor bind:content={data[richTextTargetKey]} />
+      {#if richTextArrayIndex >= 0}
+        <RichTextEditor bind:content={richTextArrayContent} />
+      {:else}
+        <RichTextEditor bind:content={data[richTextTargetKey]} />
+      {/if}
     </Modal>
   {/if}
 
@@ -790,5 +861,38 @@
   .checkbox-label.compact input[type="checkbox"] {
     width: 13px;
     height: 13px;
+  }
+  .button-item {
+    margin-bottom: 4px;
+  }
+  .remove-btn {
+    background: #441111;
+    border: 1px solid #662222;
+    color: #ff6666;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 6px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .remove-btn:hover {
+    background: #662222;
+  }
+  .add-btn {
+    width: 100%;
+    padding: 6px;
+    background: #1a2a1a;
+    border: 1px dashed #3a5a3a;
+    color: #8a8;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .add-btn:hover {
+    background: #2a3a2a;
+    border-color: #5a8a5a;
+    color: #afa;
   }
 </style>
