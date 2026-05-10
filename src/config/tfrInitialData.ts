@@ -148,6 +148,8 @@ export const TFR_INITIAL_FOCUS_NODES: Node[] = [
       icon: "/tfr/preset/USA_USA_enforce_order.png",
       label: "<p>保持秩序</p>",
       status: "completed",
+      scale: 1.0,
+      verticalOffset: 0,
     },
   },
   {
@@ -158,6 +160,8 @@ export const TFR_INITIAL_FOCUS_NODES: Node[] = [
       icon: "/tfr/preset/USA_USA_invoke_the_insurrection_act.png",
       label: "<p>通过叛乱法</p>",
       status: "inProgress",
+      scale: 1.0,
+      verticalOffset: 0,
     },
   },
   {
@@ -168,6 +172,8 @@ export const TFR_INITIAL_FOCUS_NODES: Node[] = [
       icon: "/tfr/preset/USA_USA_lasting_peace.png",
       label: "<p>持久和平</p>",
       status: "unavailable",
+      scale: 1.0,
+      verticalOffset: 0,
     },
   },
 ];

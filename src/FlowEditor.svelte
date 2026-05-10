@@ -1,10 +1,26 @@
 <script lang="ts">
-  import { SvelteFlow, Background, Controls, type Node, type Edge, useSvelteFlow, ConnectionMode } from "@xyflow/svelte";
+  import {
+    SvelteFlow,
+    Background,
+    Controls,
+    type Node,
+    type Edge,
+    useSvelteFlow,
+    ConnectionMode,
+  } from "@xyflow/svelte";
   import "@xyflow/svelte/dist/style.css";
   import { toPng } from "html-to-image";
   import { onMount, setContext } from "svelte";
   import { fade } from "svelte/transition";
-  import { ImageIcon, HelpCircle, Type, PieChart as PieIcon, Plus, TreePine, Home } from "lucide-svelte";
+  import {
+    ImageIcon,
+    HelpCircle,
+    Type,
+    PieChart as PieIcon,
+    Plus,
+    TreePine,
+    Home,
+  } from "lucide-svelte";
   import JSZip from "jszip";
   import { exportProjectToZip } from "./utils/exportUtils";
   import { currentVersion } from "./utils/version";
@@ -40,8 +56,18 @@
   import SettingsPanel from "./components/SettingsPanel.svelte";
   import PresetManager from "./components/PresetManager.svelte";
 
-  import { TFR_INITIAL_NODES, TFR_INITIAL_FOCUS_NODES, TFR_INITIAL_FOCUS_EDGES, TFR_CHART_DATA } from "./config/tfrInitialData";
-  import { TNO_INITIAL_NODES, TNO_INITIAL_FOCUS_NODES, TNO_INITIAL_FOCUS_EDGES, TNO_CHART_DATA } from "./config/tnoInitialData";
+  import {
+    TFR_INITIAL_NODES,
+    TFR_INITIAL_FOCUS_NODES,
+    TFR_INITIAL_FOCUS_EDGES,
+    TFR_CHART_DATA,
+  } from "./config/tfrInitialData";
+  import {
+    TNO_INITIAL_NODES,
+    TNO_INITIAL_FOCUS_NODES,
+    TNO_INITIAL_FOCUS_EDGES,
+    TNO_CHART_DATA,
+  } from "./config/tnoInitialData";
   import { db } from "./utils/db";
 
   let { version } = $props();
@@ -93,7 +119,9 @@
   let selectedFocusNode = $derived(focusNodes.find((n) => n.selected));
 
   // Which node/edge is selected for the properties panel
-  let panelNode = $derived(activePage === "focus" ? selectedFocusNode : selectedNode);
+  let panelNode = $derived(
+    activePage === "focus" ? selectedFocusNode : selectedNode,
+  );
 
   let showAddMenu = $state(false);
   let showSettings = $state(false);
@@ -115,9 +143,12 @@
         exportScale: saved.config?.exportScale || s.exportScale,
       }));
     } else {
-      const initNodes = version === "tno" ? TNO_INITIAL_NODES : TFR_INITIAL_NODES;
-      const initFocusNodes = version === "tno" ? TNO_INITIAL_FOCUS_NODES : TFR_INITIAL_FOCUS_NODES;
-      const initFocusEdges = version === "tno" ? TNO_INITIAL_FOCUS_EDGES : TFR_INITIAL_FOCUS_EDGES;
+      const initNodes =
+        version === "tno" ? TNO_INITIAL_NODES : TFR_INITIAL_NODES;
+      const initFocusNodes =
+        version === "tno" ? TNO_INITIAL_FOCUS_NODES : TFR_INITIAL_FOCUS_NODES;
+      const initFocusEdges =
+        version === "tno" ? TNO_INITIAL_FOCUS_EDGES : TFR_INITIAL_FOCUS_EDGES;
 
       nodes = JSON.parse(JSON.stringify(initNodes));
       focusNodes = JSON.parse(JSON.stringify(initFocusNodes));
@@ -167,7 +198,8 @@
     const id = `${type}-${Date.now()}`;
     let defaultData: any = { alias: "" };
 
-    const baseInitNodes = version === "tno" ? TNO_INITIAL_NODES : TFR_INITIAL_NODES;
+    const baseInitNodes =
+      version === "tno" ? TNO_INITIAL_NODES : TFR_INITIAL_NODES;
     const initNode = baseInitNodes.find((n) => n.type === type);
 
     if (initNode && !["text", "image", "pie"].includes(type)) {
@@ -182,7 +214,8 @@
           defaultData = { url: "", fit: "contain" };
           break;
         case "pie":
-          const defaultChart = version === "tno" ? TNO_CHART_DATA : TFR_CHART_DATA;
+          const defaultChart =
+            version === "tno" ? TNO_CHART_DATA : TFR_CHART_DATA;
           defaultData = { chartData: JSON.parse(JSON.stringify(defaultChart)) };
           break;
         default:
@@ -206,7 +239,10 @@
     focusNodes.push({
       id,
       type: "focus",
-      position: pos || { x: 200 + Math.random() * 100, y: 100 + Math.random() * 100 },
+      position: pos || {
+        x: 200 + Math.random() * 100,
+        y: 100 + Math.random() * 100,
+      },
       data: { icon: "", label: "新国策", status: "unavailable" },
     });
   }
@@ -221,7 +257,11 @@
         backgroundColor: $globalSettings.bgColor,
         pixelRatio: $globalSettings.exportScale,
         filter: (node: any) =>
-          node.classList ? !node.classList.contains("svelte-flow__controls") && !node.classList.contains("svelte-flow__panel") && !node.classList.contains("svelte-flow__handle") : true,
+          node.classList
+            ? !node.classList.contains("svelte-flow__controls") &&
+              !node.classList.contains("svelte-flow__panel") &&
+              !node.classList.contains("svelte-flow__handle")
+            : true,
       });
       const link = document.createElement("a");
       link.download = `design-${Date.now()}.png`;
@@ -238,8 +278,17 @@
     isExporting = true;
     loadingStatus = "正在打包资源...";
     try {
-      const config = { bgColor: $globalSettings.bgColor, themeColor: $globalSettings.themeColor, exportScale: $globalSettings.exportScale };
-      const blob = await exportProjectToZip(nodes, config, focusNodes, focusEdges);
+      const config = {
+        bgColor: $globalSettings.bgColor,
+        themeColor: $globalSettings.themeColor,
+        exportScale: $globalSettings.exportScale,
+      };
+      const blob = await exportProjectToZip(
+        nodes,
+        config,
+        focusNodes,
+        focusEdges,
+      );
       const link = document.createElement("a");
       link.download = `full-project-${Date.now()}.zip`;
       link.href = URL.createObjectURL(blob);
@@ -286,8 +335,21 @@
       };
 
       for (const node of nodesToImport) {
-        const keys = ["leaderImg", "flagImg", "ideologyImg", "factionImg", "focusImg", "newsImg", "eventImg", "superImg", "url", "icon"];
-        for (const k of keys) if (node.data[k]) node.data[k] = await restoreImage(node.data[k]);
+        const keys = [
+          "leaderImg",
+          "flagImg",
+          "ideologyImg",
+          "factionImg",
+          "focusImg",
+          "newsImg",
+          "newsheaderImg",
+          "eventImg",
+          "superImg",
+          "url",
+          "icon",
+        ];
+        for (const k of keys)
+          if (node.data[k]) node.data[k] = await restoreImage(node.data[k]);
         if (node.data.spirits) {
           for (const s of node.data.spirits) s.url = await restoreImage(s.url);
         }
@@ -304,7 +366,9 @@
       if (projectData.config) {
         globalSettings.set({
           bgColor: projectData.config.bgColor || "#121212",
-          themeColor: projectData.config.themeColor || (version === "tno" ? "#00ffcc" : "#ff0071"),
+          themeColor:
+            projectData.config.themeColor ||
+            (version === "tno" ? "#00ffcc" : "#ff0071"),
           exportScale: projectData.config.exportScale || 2,
         });
       }
@@ -377,7 +441,11 @@
   }
 
   function goHome() {
-    if (confirm("返回主页？未保存的更改可能会丢失（已启用自动保存到本地数据库）。")) {
+    if (
+      confirm(
+        "返回主页？未保存的更改可能会丢失（已启用自动保存到本地数据库）。",
+      )
+    ) {
       currentVersion.set(null);
     }
   }
@@ -391,8 +459,14 @@
       </button>
       <ProjectMenu onAction={handleMenuAction} />
       <div class="page-toggle">
-        <button class:active={activePage === "event"} onclick={() => (activePage = "event")}>事件</button>
-        <button class:active={activePage === "focus"} onclick={() => (activePage = "focus")}>国策树</button>
+        <button
+          class:active={activePage === "event"}
+          onclick={() => (activePage = "event")}>事件</button
+        >
+        <button
+          class:active={activePage === "focus"}
+          onclick={() => (activePage = "focus")}>国策树</button
+        >
       </div>
       {#if activePage === "focus"}
         <button class="add-focus-btn" onclick={() => addFocusNode()}>
@@ -404,7 +478,12 @@
 
   {#if panelNode}
     <div class="right-panel" transition:fade={{ duration: 150 }}>
-      <PropertiesPanel node={panelNode} onDelete={() => deleteNode(panelNode!.id)} focusEdges={activePage === "focus" ? focusEdges : []} onDeleteEdge={(id: string) => deleteFocusEdge(id)} />
+      <PropertiesPanel
+        node={panelNode}
+        onDelete={() => deleteNode(panelNode!.id)}
+        focusEdges={activePage === "focus" ? focusEdges : []}
+        onDeleteEdge={(id: string) => deleteFocusEdge(id)}
+      />
     </div>
   {/if}
 
@@ -414,20 +493,38 @@
       <div class="add-section">
         <h4>窗口模板</h4>
         <div class="template-grid">
-          <button onclick={() => addWindow("mainWindow")}><ImageIcon size={16} /> 角色主窗口</button>
-          <button onclick={() => addWindow("news")}><ImageIcon size={16} /> 新闻窗口</button>
-          <button onclick={() => addWindow("event")}><ImageIcon size={16} /> 事件窗口</button>
-          <button onclick={() => addWindow("super")}><ImageIcon size={16} /> 超级事件</button>
-          <button onclick={() => addWindow("spirit")}><ImageIcon size={16} /> 国家精神栏</button>
-          <button onclick={() => addWindow("desc")}><ImageIcon size={16} /> 角色描述</button>
+          <button onclick={() => addWindow("mainWindow")}
+            ><ImageIcon size={16} /> 角色主窗口</button
+          >
+          <button onclick={() => addWindow("news")}
+            ><ImageIcon size={16} /> 新闻窗口</button
+          >
+          <button onclick={() => addWindow("event")}
+            ><ImageIcon size={16} /> 事件窗口</button
+          >
+          <button onclick={() => addWindow("super")}
+            ><ImageIcon size={16} /> 超级事件</button
+          >
+          <button onclick={() => addWindow("spirit")}
+            ><ImageIcon size={16} /> 国家精神栏</button
+          >
+          <button onclick={() => addWindow("desc")}
+            ><ImageIcon size={16} /> 角色描述</button
+          >
         </div>
       </div>
       <div class="add-section">
         <h4>原子组件</h4>
         <div class="template-grid">
-          <button onclick={() => addWindow("text")}><Type size={16} /> 独立文字</button>
-          <button onclick={() => addWindow("image")}><ImageIcon size={16} /> 独立图片</button>
-          <button onclick={() => addWindow("pie")}><PieIcon size={16} /> 独立饼图</button>
+          <button onclick={() => addWindow("text")}
+            ><Type size={16} /> 独立文字</button
+          >
+          <button onclick={() => addWindow("image")}
+            ><ImageIcon size={16} /> 独立图片</button
+          >
+          <button onclick={() => addWindow("pie")}
+            ><PieIcon size={16} /> 独立饼图</button
+          >
         </div>
       </div>
     </div>
@@ -438,7 +535,11 @@
       bind:nodes
       bind:focusNodes
       bind:focusEdges
-      config={{ bgColor: $globalSettings.bgColor, themeColor: $globalSettings.themeColor, exportScale: $globalSettings.exportScale }}
+      config={{
+        bgColor: $globalSettings.bgColor,
+        themeColor: $globalSettings.themeColor,
+        exportScale: $globalSettings.exportScale,
+      }}
       onLoaded={() => (showPresets = false)}
       onConfigLoad={(c: any) => {
         globalSettings.update((s) => ({
@@ -451,13 +552,32 @@
     />
   </Modal>
 
-  <Modal title="系统设置" bind:isOpen={showSettings} width="500px" height="auto">
-    <SettingsPanel bind:bgColor={$globalSettings.bgColor} bind:themeColor={$globalSettings.themeColor} bind:exportScale={$globalSettings.exportScale} />
+  <Modal
+    title="系统设置"
+    bind:isOpen={showSettings}
+    width="500px"
+    height="auto"
+  >
+    <SettingsPanel
+      bind:bgColor={$globalSettings.bgColor}
+      bind:themeColor={$globalSettings.themeColor}
+      bind:exportScale={$globalSettings.exportScale}
+    />
   </Modal>
 
   {#if activePage === "event"}
-    <SvelteFlow bind:nodes {nodeTypes} initialViewport={{ zoom: 1, x: 50, y: 50 }} snapGrid={[10, 10]} connectionMode={ConnectionMode.Loose}>
-      <Background gap={20} patternColor="#333" bgColor={$globalSettings.bgColor} />
+    <SvelteFlow
+      bind:nodes
+      {nodeTypes}
+      initialViewport={{ zoom: 1, x: 50, y: 50 }}
+      snapGrid={[10, 10]}
+      connectionMode={ConnectionMode.Loose}
+    >
+      <Background
+        gap={20}
+        patternColor="#333"
+        bgColor={$globalSettings.bgColor}
+      />
       <Controls position="bottom-left" />
     </SvelteFlow>
   {:else}
@@ -468,18 +588,27 @@
       {edgeTypes}
       initialViewport={{ zoom: 40, x: 50, y: 50 }}
       snapGrid={[10, 10]}
-      defaultEdgeOptions={{ type: "focusStep", data: { dashed: false, exclusive: false, completed: false } }}
+      defaultEdgeOptions={{
+        type: "focusStep",
+        data: { dashed: false, exclusive: false, completed: false },
+      }}
       fitView
       connectionMode={ConnectionMode.Loose}
     >
-      <Background gap={20} patternColor="#333" bgColor={$globalSettings.bgColor} />
+      <Background
+        gap={20}
+        patternColor="#333"
+        bgColor={$globalSettings.bgColor}
+      />
       <Controls position="bottom-left" />
     </SvelteFlow>
   {/if}
 
   {#if isExporting}
     <div class="export-overlay" transition:fade>
-      <div class="loader">{loadingStatus || `正在生成 ${$globalSettings.exportScale}x 截图...`}</div>
+      <div class="loader">
+        {loadingStatus || `正在生成 ${$globalSettings.exportScale}x 截图...`}
+      </div>
     </div>
   {/if}
 </div>

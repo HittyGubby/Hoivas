@@ -12,10 +12,18 @@
 </script>
 
 {#if selected}
-  <NodeResizer minWidth={200} color="var(--theme-color)" keepAspectRatio={true} />
+  <NodeResizer
+    minWidth={200}
+    color="var(--theme-color)"
+    keepAspectRatio={true}
+  />
 {/if}
 
-<div class="news-scaler" style:transform="scale({scale})" style:width="{BASE_WIDTH}px">
+<div
+  class="news-scaler"
+  style:transform="scale({scale})"
+  style:width="{BASE_WIDTH}px"
+>
   <div class="news-window-container">
     <img src={"/tno/template/news/event_news_bg.png"} class="bg-img" alt="" />
 
@@ -26,7 +34,10 @@
 
     <!-- News header image -->
     <div class="news-header-pic">
-      <img src={data.headerImg} alt="" />
+      <img
+        src={data.newsheaderImg || "/tno/preset/nazist-Germany.png"}
+        alt=""
+      />
     </div>
 
     <!-- Title -->
@@ -81,13 +92,13 @@
     position: absolute;
     top: 20px;
     left: 25px;
-    width: 480px;
-    height: 70px;
+    width: 492px;
+    height: 75px;
   }
   .news-header-pic img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .news-title-container {

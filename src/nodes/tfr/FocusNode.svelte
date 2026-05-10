@@ -27,9 +27,17 @@
     <Handle type="source" position={Position.Right} id="right" />
 
     <img class="bg" src={bgPath} alt="" />
-    {#if data.icon}
-      <img class="icon" src={data.icon} alt="" />
-    {/if}
+    <div class="icon-container">
+      {#if data.icon}
+        <img
+          class="icon"
+          style:transform="scale({data.scale || 1.0}) translateY({data.verticalOffset ||
+            0}px)"
+          src={data.icon}
+          alt=""
+        />
+      {/if}
+    </div>
     {#if data.label}
       <div class="label-wrapper">
         <span class="label">{@html data.label}</span>
@@ -65,13 +73,21 @@
     cursor: grab;
   }
 
-  .icon {
+  .icon-container {
     position: absolute;
-    bottom: 0px;
+    bottom: calc(100% - 35px);
     left: 50%;
-    transform: translateX(-50%);
+    width: 0;
     z-index: 8;
     pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .icon {
+    bottom: 0;
+    position: absolute;
   }
 
   .label-wrapper {

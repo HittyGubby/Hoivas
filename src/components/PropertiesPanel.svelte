@@ -12,6 +12,7 @@
     Trash2,
     Maximize,
   } from "lucide-svelte";
+  import { getVersion } from "../utils/version";
 
   let { node, onDelete, focusEdges = [], onDeleteEdge = undefined } = $props();
 
@@ -226,7 +227,16 @@
         >编辑饼图数据</button
       >
     </div>
-  {:else if node.type === "news" || node.type === "event"}
+  {:else if node.type === "news"}
+    {#if getVersion() === "tno"}
+      <div class="section">
+        <button
+          class="editor-trigger secondary"
+          onclick={() => openPicManager("newsheader", "newsheaderImg")}
+          >更换页眉</button
+        >
+      </div>
+    {/if}
     <div class="section">
       <label>标题</label>
       <div class="input-group">
@@ -240,8 +250,45 @@
     <div class="section">
       <button
         class="editor-trigger secondary"
-        onclick={() => openPicManager(node.type, node.type + "Img")}
-        >更换图片</button
+        onclick={() => openPicManager("news", "newsImg")}>更换图片</button
+      >
+    </div>
+    <div class="section">
+      <label>正文内容</label>
+      <div class="input-group">
+        <textarea rows="4" bind:value={data.body} class="styled-input"
+        ></textarea>
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("body", "编辑正文内容")}>+</button
+        >
+      </div>
+    </div>
+    <div class="section">
+      <label>按钮文字</label>
+      <div class="input-group">
+        <input type="text" bind:value={data.buttonText} class="styled-input" />
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("buttonText", "编辑按钮文字")}>+</button
+        >
+      </div>
+    </div>
+  {:else if node.type === "event"}
+    <div class="section">
+      <label>标题</label>
+      <div class="input-group">
+        <input type="text" bind:value={data.title} class="styled-input" />
+        <button
+          class="rich-trigger"
+          onclick={() => openRichText("title", "编辑标题")}>+</button
+        >
+      </div>
+    </div>
+    <div class="section">
+      <button
+        class="editor-trigger secondary"
+        onclick={() => openPicManager("event", "eventImg")}>更换图片</button
       >
     </div>
     <div class="section">
@@ -364,12 +411,36 @@
         >
       </div>
     </div>
-    <div class="section">
-      <button
-        class="editor-trigger secondary"
-        onclick={() => openPicManager("focus", "icon")}>更换图标</button
-      >
+
+    <div class="section icon-scale-row">
+      <div class="sub-col">
+        <button
+          class="editor-trigger secondary"
+          onclick={() => openPicManager("focus", "icon")}>更换图标</button
+        >
+      </div>
+      <div class="sub-col narrow">
+        <label>缩放</label>
+        <input
+          type="number"
+          step="0.1"
+          bind:value={data.scale}
+          placeholder="1.0"
+          class="styled-input"
+        />
+      </div>
+      <div class="sub-col narrow">
+        <label>偏移</label>
+        <input
+          type="number"
+          step="1"
+          bind:value={data.verticalOffset}
+          placeholder="0"
+          class="styled-input"
+        />
+      </div>
     </div>
+
     <div class="section">
       <label>状态</label>
       <select bind:value={data.status} class="styled-input">

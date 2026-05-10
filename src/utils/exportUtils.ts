@@ -57,6 +57,7 @@ export async function exportProjectToZip(
       "factionImg",
       "focusImg",
       "newsImg",
+      "newsheaderImg",
       "eventImg",
       "superImg",
       "url",

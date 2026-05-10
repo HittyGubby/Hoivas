@@ -2,7 +2,15 @@
   import { onMount } from "svelte";
   import JSZip from "jszip";
   import { db } from "../utils/db";
-  import { Trash2, RotateCcw, Save, FileJson, Clock, Download, Upload } from "lucide-svelte";
+  import {
+    Trash2,
+    RotateCcw,
+    Save,
+    FileJson,
+    Clock,
+    Download,
+    Upload,
+  } from "lucide-svelte";
   import { exportProjectToZip } from "../utils/exportUtils";
 
   let {
@@ -105,7 +113,9 @@
           const blob = await imgFile.async("blob");
           await db.addCustomPic("imported", imgFile.name, blob);
           const results = await db.getAllCustomPics("imported");
-          const newUrl = results.find((r: any) => r.filename === imgFile.name)?.url;
+          const newUrl = results.find(
+            (r: any) => r.filename === imgFile.name,
+          )?.url;
           if (newUrl) {
             pathMap.set(path, newUrl);
             return newUrl;
@@ -115,7 +125,18 @@
       };
 
       for (const node of nodesToImport) {
-        const keys = ["leaderImg", "flagImg", "ideologyImg", "factionImg", "focusImg", "newsImg", "eventImg", "superImg", "url"];
+        const keys = [
+          "leaderImg",
+          "flagImg",
+          "ideologyImg",
+          "factionImg",
+          "focusImg",
+          "newsImg",
+          "newsheaderImg",
+          "eventImg",
+          "superImg",
+          "url",
+        ];
         for (const k of keys) {
           if (node.data?.[k]) node.data[k] = await restoreImage(node.data[k]);
         }
@@ -128,7 +149,8 @@
 
       const focusNodesToImport = projectData.focusNodes || [];
       for (const node of focusNodesToImport) {
-        if (node.data?.icon) node.data.icon = await restoreImage(node.data.icon);
+        if (node.data?.icon)
+          node.data.icon = await restoreImage(node.data.icon);
       }
 
       // Save as a new project
@@ -160,7 +182,12 @@
     </button>
     <label class="import-btn">
       <Upload size={14} /> 导入ZIP
-      <input type="file" accept=".zip" onchange={handleImportZip} style="display: none;" />
+      <input
+        type="file"
+        accept=".zip"
+        onchange={handleImportZip}
+        style="display: none;"
+      />
     </label>
   </div>
 
@@ -169,15 +196,26 @@
       <div class="project-card">
         <div class="card-info">
           <p class="name">{p.name}</p>
-          <p class="time"><Clock size={10} /> {new Date(p.timestamp).toLocaleString()}</p>
+          <p class="time">
+            <Clock size={10} />
+            {new Date(p.timestamp).toLocaleString()}
+          </p>
         </div>
         <div class="card-ops">
-          <button class="export-btn-styled" onclick={() => handleExport(p)} disabled={isExporting}>
+          <button
+            class="export-btn-styled"
+            onclick={() => handleExport(p)}
+            disabled={isExporting}
+          >
             <Download size={14} />
             {isExporting ? "正在导出..." : "导出"}
           </button>
-          <button class="load-btn" onclick={() => handleLoad(p)}><RotateCcw size={14} /> 载入</button>
-          <button class="del-btn" onclick={() => handleDelete(p.id)}><Trash2 size={14} /></button>
+          <button class="load-btn" onclick={() => handleLoad(p)}
+            ><RotateCcw size={14} /> 载入</button
+          >
+          <button class="del-btn" onclick={() => handleDelete(p.id)}
+            ><Trash2 size={14} /></button
+          >
         </div>
       </div>
     {/each}

@@ -72,7 +72,7 @@
     <div class="faction-icon-container">
       <img
         src={data.factionImg}
-        style:transform="scale({data.factionScale || 0.8})"
+        style:transform="scale({data.factionScale || 0.7})"
         class="contain-img"
         alt=""
       />
@@ -158,10 +158,9 @@
     width: 100%;
     height: 100%;
   }
+
   .contain-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+    position: absolute;
   }
 
   .flag-box {
@@ -248,21 +247,26 @@
   /* Icons */
   .ideology-icon-container {
     position: absolute;
-    top: 10px;
-    left: 147px;
+    top: 40px;
+    left: 180px;
     z-index: 3;
     display: flex;
     justify-content: center;
     align-items: center;
   }
+
   .faction-icon-container {
     position: absolute;
-    top: 8px;
-    left: 445px;
+    top: 43px;
+    left: 485px;
     z-index: 3;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .focus-img {
+    position: absolute;
   }
 
   /* Pie Chart */
