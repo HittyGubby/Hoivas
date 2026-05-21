@@ -667,7 +667,7 @@
     border-radius: 6px;
     cursor: pointer;
     font-size: 13px;
-    font-family: "Cubic", sans-serif;
+    font-family: sans-serif;
     transition: 0.2s;
   }
   .page-toggle button.active {
@@ -685,7 +685,7 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
-    font-family: "Cubic", sans-serif;
+    font-family: sans-serif;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -764,7 +764,7 @@
     justify-content: center;
     align-items: center;
     color: var(--theme-color);
-    font-family: "Cubic", sans-serif;
+    font-family: sans-serif;
     font-size: 20px;
   }
 </style>

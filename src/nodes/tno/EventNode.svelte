@@ -77,7 +77,8 @@
         src="/tno/template/news/event_report_tileable_midsection.png"
         style="position: absolute; top: {200 +
           i *
-            TILE_HEIGHT}px; left: 0; width: 100%; height: {TILE_HEIGHT}px; z-index: 1;"
+            (TILE_HEIGHT -
+              2)}px; left: 0; width: 100%; height: {TILE_HEIGHT}px; z-index: 1;"
         alt=""
       />
     {/each}
@@ -85,7 +86,7 @@
     <img
       src="/tno/template/news/event_report_bottom_win.png"
       style="position: absolute; top: {200 +
-        tiles * TILE_HEIGHT}px; left: 1px; width: 100%; z-index: 1;"
+        tiles * (TILE_HEIGHT - 2)}px; left: 1px; width: 100%; z-index: 1;"
       alt=""
     />
 
