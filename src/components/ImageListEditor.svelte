@@ -99,6 +99,8 @@
     border-radius: 12px;
     padding: 15px;
     border: 1px solid #333;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .scroll-area {
@@ -231,6 +233,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    min-height: 0;
   }
 
   .library-content {
