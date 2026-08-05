@@ -43,6 +43,16 @@
   src: url(/common/fonts/OldTyperNr.woff2) format("woff2");
 }
 
+@font-face {
+  font-family: Pure;
+  src: url(/common/fonts/Pure.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: Ubuntu;
+  src: url(/common/fonts/Ubuntu-M.woff2) format("woff2");
+}
+
 * {
   cursor: url(/template/embark.png), auto;
 }

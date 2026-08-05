@@ -25,4 +25,5 @@ dist-ssr
 
 public/tfr/data
 public/tno/data
-TNOCreator/
+public/pb/data
+tmp/

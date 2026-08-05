@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-export type ProjectVersion = "tfr" | "tno";
+export type ProjectVersion = "tfr" | "tno" | "pb";
 
 export const currentVersion = writable<ProjectVersion | null>(null);
 
@@ -15,6 +15,6 @@ export function getVersion(): string | null {
 
 // Initialize from localStorage if available
 const savedVersion = localStorage.getItem("hoivas-version");
-if (savedVersion === "tfr" || savedVersion === "tno") {
+if (savedVersion === "tfr" || savedVersion === "tno" || savedVersion === "pb") {
   currentVersion.set(savedVersion);
 }

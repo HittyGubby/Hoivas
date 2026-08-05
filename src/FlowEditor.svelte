@@ -50,6 +50,15 @@
   import TNODescriptionNode from "./nodes/tno/DescriptionNode.svelte";
   import TNOFocusNode from "./nodes/tno/FocusNode.svelte";
 
+  // PB Specific Nodes
+  import PBMainWindowNode from "./nodes/pb/MainWindowNode.svelte";
+  import PBNewsNode from "./nodes/pb/NewsNode.svelte";
+  import PBEventNode from "./nodes/pb/EventNode.svelte";
+  import PBSupereventNode from "./nodes/pb/SupereventNode.svelte";
+  import PBSpiritNode from "./nodes/pb/SpiritNode.svelte";
+  import PBDescriptionNode from "./nodes/pb/DescriptionNode.svelte";
+  import PBFocusNode from "./nodes/pb/FocusNode.svelte";
+
   import PropertiesPanel from "./components/PropertiesPanel.svelte";
   import Modal from "./components/Modal.svelte";
   import ProjectMenu from "./components/ProjectMenu.svelte";
@@ -68,6 +77,12 @@
     TNO_INITIAL_FOCUS_EDGES,
     TNO_CHART_DATA,
   } from "./config/tnoInitialData";
+  import {
+    PB_INITIAL_NODES,
+    PB_INITIAL_FOCUS_NODES,
+    PB_INITIAL_FOCUS_EDGES,
+    PB_CHART_DATA,
+  } from "./config/pbInitialData";
   import { db } from "./utils/db";
 
   let { version } = $props();
@@ -98,9 +113,48 @@
       image: ImageNode,
       pie: StandalonePieNode,
     },
+    pb: {
+      mainWindow: PBMainWindowNode,
+      news: PBNewsNode,
+      event: PBEventNode,
+      super: PBSupereventNode,
+      spirit: PBSpiritNode,
+      desc: PBDescriptionNode,
+      focus: PBFocusNode,
+      text: TextNode,
+      image: ImageNode,
+      pie: StandalonePieNode,
+    },
   };
 
   const nodeTypes = nodeTypesMap[version] || nodeTypesMap.tfr;
+
+  // Version-keyed resolver maps (unifies tno/tfr/pb dispatch)
+  const INITIAL_NODES_BY_VERSION: Record<string, Node[]> = {
+    tno: TNO_INITIAL_NODES,
+    tfr: TFR_INITIAL_NODES,
+    pb: PB_INITIAL_NODES,
+  };
+  const INITIAL_FOCUS_NODES_BY_VERSION: Record<string, Node[]> = {
+    tno: TNO_INITIAL_FOCUS_NODES,
+    tfr: TFR_INITIAL_FOCUS_NODES,
+    pb: PB_INITIAL_FOCUS_NODES,
+  };
+  const INITIAL_FOCUS_EDGES_BY_VERSION: Record<string, Edge[]> = {
+    tno: TNO_INITIAL_FOCUS_EDGES,
+    tfr: TFR_INITIAL_FOCUS_EDGES,
+    pb: PB_INITIAL_FOCUS_EDGES,
+  };
+  const CHART_DATA_BY_VERSION: Record<string, typeof TNO_CHART_DATA> = {
+    tno: TNO_CHART_DATA,
+    tfr: TFR_CHART_DATA,
+    pb: PB_CHART_DATA,
+  };
+  const THEME_COLOR_BY_VERSION: Record<string, string> = {
+    tno: "#00ffcc",
+    tfr: "#ff0071",
+    pb: "#7a5cff",
+  };
 
   const edgeTypes = {
     focusStep: FocusStepEdge,
@@ -143,12 +197,9 @@
         exportScale: saved.config?.exportScale || s.exportScale,
       }));
     } else {
-      const initNodes =
-        version === "tno" ? TNO_INITIAL_NODES : TFR_INITIAL_NODES;
-      const initFocusNodes =
-        version === "tno" ? TNO_INITIAL_FOCUS_NODES : TFR_INITIAL_FOCUS_NODES;
-      const initFocusEdges =
-        version === "tno" ? TNO_INITIAL_FOCUS_EDGES : TFR_INITIAL_FOCUS_EDGES;
+      const initNodes = INITIAL_NODES_BY_VERSION[version];
+      const initFocusNodes = INITIAL_FOCUS_NODES_BY_VERSION[version];
+      const initFocusEdges = INITIAL_FOCUS_EDGES_BY_VERSION[version];
 
       nodes = JSON.parse(JSON.stringify(initNodes));
       focusNodes = JSON.parse(JSON.stringify(initFocusNodes));
@@ -198,8 +249,7 @@
     const id = `${type}-${Date.now()}`;
     let defaultData: any = { alias: "" };
 
-    const baseInitNodes =
-      version === "tno" ? TNO_INITIAL_NODES : TFR_INITIAL_NODES;
+    const baseInitNodes = INITIAL_NODES_BY_VERSION[version];
     const initNode = baseInitNodes.find((n) => n.type === type);
 
     if (initNode && !["text", "image", "pie"].includes(type)) {
@@ -214,8 +264,7 @@
           defaultData = { url: "", fit: "contain" };
           break;
         case "pie":
-          const defaultChart =
-            version === "tno" ? TNO_CHART_DATA : TFR_CHART_DATA;
+          const defaultChart = CHART_DATA_BY_VERSION[version];
           defaultData = { chartData: JSON.parse(JSON.stringify(defaultChart)) };
           break;
         default:
@@ -367,8 +416,7 @@
         globalSettings.set({
           bgColor: projectData.config.bgColor || "#121212",
           themeColor:
-            projectData.config.themeColor ||
-            (version === "tno" ? "#00ffcc" : "#ff0071"),
+            projectData.config.themeColor || THEME_COLOR_BY_VERSION[version],
           exportScale: projectData.config.exportScale || 2,
         });
       }

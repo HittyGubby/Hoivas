@@ -6,7 +6,7 @@ FULL FUSED REDUX OF TNOC & CTFR
 
 0. git clone && bun install && bun run build
 
-1. 下载素材[TFR数据](http://997779.best/share/TFRdata.zip)、[TNO数据](http://997779.best/share/TNOdata.zip) 解压到dist/tfr和dist/tno
+1. 下载素材[TFR数据](http://997779.best/share/TFRdata.zip)、[TNO数据](http://997779.best/share/TNOdata.zip)、[PB数据](http://997779.best/share/PBdata.zip)解压到dist/tfr dist/tno dist/pb
 
 2. 运行静态网站
 

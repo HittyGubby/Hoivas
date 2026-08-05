@@ -22,7 +22,6 @@
   <div class="main-menu" in:fly={{ x: -50, duration: 1000, delay: 200 }}>
     <div class="logo-area">
       <h1 class="title">HOIVAS</h1>
-      <p class="subtitle">ALL IN ONE</p>
     </div>
 
     <div class="menu-list">
@@ -32,6 +31,10 @@
 
       <button class="menu-btn" onclick={() => selectVersion("tno")}>
         <span class="btn-text">THE NEW ORDER</span>
+      </button>
+
+      <button class="menu-btn" onclick={() => selectVersion("pb")}>
+        <span class="btn-text">PAX BRITANNICA</span>
       </button>
 
       <div class="divider"></div>
@@ -45,7 +48,12 @@
     <div class="footer">
       <p>HOIVAS PROJECT SERIES</p>
       <p>PROUDLY PRESENTS</p>
-      <p>© <a href="https://github.com/HittyGubby/Hoivas" style="color:blueviolet">HOIVAS</a></p>
+      <p>
+        © <a
+          href="https://github.com/HittyGubby/Hoivas"
+          style="color:blueviolet">HOIVAS</a
+        >
+      </p>
     </div>
   </div>
 
@@ -53,16 +61,13 @@
     <div class="news-box">
       <h3>最新更新</h3>
       <ul>
-        <li>整合TNO/TFR</li>
-        <li>国策树支持</li>
-        <li>画板化重构</li>
+        <li>整合TNO/TFR/PB</li>
       </ul>
       <br />
       <h3>敬请期待</h3>
       <ul>
-        <li>Pax Brittanica</li>
         <li>决议界面</li>
-        <li>甚至...地图？</li>
+        <li>TNO: TER/LAAR</li>
       </ul>
     </div>
   </div>
@@ -73,13 +78,17 @@
     width: 100vw;
     height: 100vh;
     background: #050505;
-    background-image: radial-gradient(circle at 70% 30%, #1a1a2e 0%, #050505 100%);
+    background-image: radial-gradient(
+      circle at 70% 30%,
+      #1a1a2e 0%,
+      #050505 100%
+    );
     display: flex;
     align-items: center;
     gap: 100px;
     padding: 0 10%;
     color: white;
-    font-family: "FZRui", "Aldrich", sans-serif;
+    font-family: "Ubuntu", sans-serif;
     overflow: hidden;
     position: relative;
   }
@@ -90,7 +99,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 50%);
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0) 50%
+    );
     pointer-events: none;
   }
 
