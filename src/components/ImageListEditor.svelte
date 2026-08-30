@@ -240,4 +240,21 @@
     flex: 1;
     overflow: hidden;
   }
+
+  /* Mobile: allow horizontal scrolling to reveal the library */
+  @media (max-width: 768px) {
+    .split-manager {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity;
+    }
+
+    .list-section,
+    .library-section {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+    }
+  }
 </style>
