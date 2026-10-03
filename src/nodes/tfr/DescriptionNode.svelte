@@ -60,7 +60,7 @@
   }
 
   .desc-body {
-    font-family: "Cubic", sans-serif;
+    font-family: "Cubic", "Heiti", sans-serif;
     font-size: 12px;
     line-height: 16px;
     color: #8aadbe;

@@ -59,7 +59,7 @@
   }
 
   .desc-body {
-    font-family: "Ubuntu", sans-serif;
+    font-family: "Ubuntu", "Heiti" , sans-serif;
     font-size: 12px;
     line-height: 16px;
     color: #eeeeee;

@@ -34,7 +34,7 @@
 
     <!-- Button -->
     <button class="super-button">
-      {data.buttonText}
+      {@html data.buttonText}
     </button>
   </div>
 </div>
@@ -51,7 +51,7 @@
     user-select: none;
     color: #cccccc;
     text-shadow: 1px 1px 2px black;
-    font-family: "Cubic", sans-serif;
+    font-family: "Cubic", "Heiti", sans-serif;
     width: 100%;
   }
 
@@ -82,7 +82,7 @@
   .super-title-box {
     position: absolute;
     left: 220px;
-    top: 20px;
+    top: 25px;
     width: 570px;
     display: flex;
     justify-content: center;
@@ -125,6 +125,6 @@
     font-size: 19px;
     z-index: 20;
     cursor: pointer;
-    font-family: "Cubic", sans-serif;
+    font-family: "Cubic", "Heiti", sans-serif;
   }
 </style>

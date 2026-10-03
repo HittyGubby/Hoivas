@@ -96,7 +96,7 @@
       style="position: absolute; left: 40px; top: 80px; width: 500px; display: flex; justify-content: center; z-index: 5;"
     >
       <p
-        style="margin: 0; text-align: center; font-family: 'OldTypeNr', 'FZRui', sans-serif; font-size: 23px; color: #000000; word-break: break-word;"
+        style="margin: 0; text-align: center; font-family: 'OldTypeNr', 'Heiti', sans-serif; font-size: 23px; color: #000000; word-break: break-word;"
       >
         {@html data.title}
       </p>
@@ -109,7 +109,7 @@
       style="position: absolute; left: 43px; top: 120px; width: 500px; z-index: 2; padding-bottom: 30px; word-break: break-word; overflow-wrap: break-word;"
     >
       <span
-        style="font-family: 'electrolize', 'FZRui', sans-serif; font-size: 18px; line-height: 1.4; color: #000000;"
+        style="font-family: 'electrolize', 'Heiti', sans-serif; font-size: 18px; line-height: 1.4; color: #000000;"
       >
         {@html data.body}
       </span>
@@ -130,7 +130,7 @@
     >
       {#each buttonTexts as btnText}
         <button
-          style="width: 100%; height: {BUTTON_HEIGHT}px; border: none; background: url('/tfr/template/news/event_option_entry.png') no-repeat; background-size: 100% 100%; color: #FFFFFF; font-family: 'electrolize', 'FZRui', sans-serif; font-size: 18px; cursor: pointer; margin-bottom: {BUTTON_GAP}px;"
+          style="width: 100%; height: {BUTTON_HEIGHT}px; border: none; background: url('/tfr/template/news/event_option_entry.png') no-repeat; background-size: 100% 100%; color: #FFFFFF; font-family: 'electrolize', 'Heiti', sans-serif; font-size: 18px; cursor: pointer; margin-bottom: {BUTTON_GAP}px;"
         >
           {@html btnText}
         </button>

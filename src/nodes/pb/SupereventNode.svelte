@@ -84,7 +84,7 @@
     position: absolute;
     display: flex;
     left: 193px;
-    top: 150px;
+    top: 140px;
     justify-content: center;
     align-items: center;
     inline-size: 570px;
@@ -94,7 +94,7 @@
   .super-title {
     margin: 0;
     text-align: center;
-    font-family: "Pure", sans-serif;
+    font-family: "Pure", "Heiti", sans-serif;
     font-size: 32px;
     color: white;
   }
@@ -105,7 +105,8 @@
     top: 580px;
     z-index: 15;
     inline-size: 900px;
-    font-family: "Ubuntu", sans-serif;
+    font-family: "Ubuntu", "Heiti", sans-serif;
+    line-height: 2.5ch;
     font-weight: 600;
     font-size: 26px;
     text-align: left;
@@ -123,7 +124,7 @@
     background: url("/pb/template/Pax_Super_Event_Close_Button.png") no-repeat;
     background-size: 100% 100%;
     color: #cccccc;
-    font-family: "Ubuntu", sans-serif;
+    font-family: "Ubuntu", "Heiti", sans-serif;
     font-weight: 600;
     z-index: 20;
     cursor: pointer;

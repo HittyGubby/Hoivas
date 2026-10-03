@@ -102,7 +102,7 @@
   }
 
   .label {
-    font-family: "Aldrich", "FZRui", sans-serif;
+    font-family: "Aldrich", "FZRui", "Heiti", sans-serif;
     font-size: 11px;
     color: #ffffff;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);

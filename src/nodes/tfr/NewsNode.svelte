@@ -84,7 +84,7 @@
   .news-title {
     margin: 0;
     text-align: center;
-    font-family: "kenyan", "huangyouti", sans-serif;
+    font-family: "kenyan", "huangyouti", "Heiti", sans-serif;
     font-size: 28px;
     color: #000000;
   }
@@ -99,7 +99,7 @@
   }
 
   .news-body {
-    font-family: "electrolize", "FZRui", sans-serif;
+    font-family: "electrolize", "Heiti", sans-serif;
     font-size: 18px;
     line-height: 1.4;
     white-space: pre-line;
@@ -116,7 +116,7 @@
     background: url("/tfr/template/news/event_option_entry.png") no-repeat;
     background-size: 100% 100%;
     color: #ffffff;
-    font-family: "electrolize", "FZRui", sans-serif;
+    font-family: "electrolize", "Heiti", sans-serif;
     font-size: 18px;
     cursor: pointer;
   }

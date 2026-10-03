@@ -59,7 +59,7 @@
   }
 
   .desc-body {
-    font-family: "Aldrich", "FZRui", sans-serif;
+    font-family: "Aldrich", "Heiti", sans-serif;
     font-size: 12px;
     line-height: 16px;
     color: #8aadbe;

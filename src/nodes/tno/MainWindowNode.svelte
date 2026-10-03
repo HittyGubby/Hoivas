@@ -145,7 +145,7 @@
     user-select: none;
     color: #cccccc;
     text-shadow: 1px 1px 2px black;
-    font-family: "Aldrich", "FZRui", sans-serif;
+    font-family: "Aldrich", "FZRui", "Heiti", sans-serif;
     width: 100%;
     height: 350px;
   }
@@ -200,10 +200,10 @@
   .info-group-top {
     position: absolute;
     left: 225px;
-    top: 26px;
+    top: 28px;
     z-index: 5;
     font-size: 16px;
-    font-family: "Bombard", "FZWH", sans-serif;
+    font-family: "Bombard", "FZWH", "Heiti", sans-serif;
   }
   .info-group-top p {
     margin: 0;
@@ -223,7 +223,7 @@
 
   .info-group-mid {
     position: absolute;
-    top: 108px;
+    top: 110px;
     left: 238px;
     z-index: 3;
     font-size: 17px;

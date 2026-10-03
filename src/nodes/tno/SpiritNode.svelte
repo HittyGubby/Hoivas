@@ -54,7 +54,7 @@
     </div>
 
     <!-- Title -->
-    <div style="position: absolute; left: 15px; top: 4px; z-index: 5; color: #cccccc; text-shadow: 1px 1px 2px black; font-family: 'FZWH', sans-serif; font-size: 16px;">国家精神</div>
+    <div style="position: absolute; left: 15px; top: 6px; z-index: 5; color: #cccccc; text-shadow: 1px 1px 2px black; font-family: 'FZWH', 'Heiti', sans-serif; font-size: 16px;">国家精神</div>
   </div>
 </div>
 

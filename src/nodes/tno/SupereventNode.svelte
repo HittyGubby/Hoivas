@@ -102,7 +102,7 @@
     position: absolute;
     display: flex;
     left: 220px;
-    top: 22px;
+    top: 25px;
     justify-content: center;
     align-items: center;
     inline-size: 570px;
@@ -112,9 +112,9 @@
   .super-title {
     margin: 0;
     text-align: center;
-    font-family: "Aldrich", "FZRui", sans-serif;
+    font-family: "Aldrich", "FZRui", "Heiti", sans-serif;
     font-size: 32px;
-    color: white;
+    color: #b2c9c2 ;
   }
 
   .super-motto {
@@ -123,7 +123,7 @@
     top: 535px;
     z-index: 15;
     inline-size: 900px;
-    font-family: "Bombard", "FZWH", sans-serif;
+    font-family: "Bombard", "FZWH", "Heiti", sans-serif;
     font-size: 35px;
     text-align: right;
     white-space: pre-line;
@@ -140,7 +140,7 @@
     background: url("/tno/template/spacebar.png") no-repeat;
     background-size: 100% 100%;
     color: #cccccc;
-    font-family: "Bombard", "FZWH", sans-serif;
+    font-family: "Bombard", "FZWH", "Heiti", sans-serif;
     font-size: 21px;
     z-index: 20;
     cursor: pointer;

@@ -138,7 +138,7 @@
     user-select: none;
     color: #cccccc;
     text-shadow: 1px 1px 2px black;
-    font-family: "Cubic", sans-serif;
+    font-family: "Cubic", "Heiti", sans-serif;
     width: 100%;
     height: 350px;
   }
@@ -201,7 +201,7 @@
   .info-group-top {
     position: absolute;
     left: 228px;
-    top: 14px;
+    top: 17px;
     z-index: 5;
     font-size: 16px;
   }
@@ -216,7 +216,7 @@
 
   .info-group-mid {
     position: absolute;
-    top: 92px;
+    top: 95px;
     left: 238px;
     z-index: 3;
     font-size: 16px;
@@ -319,7 +319,7 @@
     position: absolute;
     width: 248px;
     left: 249px;
-    top: 185px;
+    top: 187px;
     display: flex;
     justify-content: center;
     z-index: 5;

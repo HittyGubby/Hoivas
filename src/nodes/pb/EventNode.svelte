@@ -94,7 +94,7 @@
       style="position: absolute; left: 40px; top: 90px; width: 500px; display: flex; justify-content: center; z-index: 5;"
     >
       <p
-        style="margin: 0; text-align: center; font-family: 'OldTypeNr', sans-serif; font-size: 20px; color: #000000; word-break: break-word;"
+        style="margin: 0; text-align: center; font-family: 'OldTypeNr', 'Heiti', sans-serif; font-size: 20px; color: #000000; word-break: break-word;"
       >
         {@html data.title}
       </p>
@@ -107,7 +107,7 @@
       style="position: absolute; left: 30px; top: 140px; width: 530px; z-index: 2; padding-bottom: 30px; word-break: break-word; overflow-wrap: break-word;"
     >
       <span
-        style="font-family: 'Ubuntu', sans-serif; font-size: 16px; line-height: 1.4; color: #000000;"
+        style="font-family: 'Ubuntu', 'Heiti', sans-serif; font-size: 16px; line-height: 1.4; color: #000000;"
       >
         {@html data.body}
       </span>
@@ -128,7 +128,7 @@
     >
       {#each buttonTexts as btnText}
         <button
-          style="width: 100%; height: {BUTTON_HEIGHT}px; border: none; background: url('/pb/template/news/event_option_entry.png') no-repeat; background-size: 100% 100%; color: black; font-family: 'Ubuntu', sans-serif; font-size: 17px; cursor: pointer; margin-bottom: {BUTTON_GAP}px;"
+          style="width: 100%; height: {BUTTON_HEIGHT}px; border: none; background: url('/pb/template/news/event_option_entry.png') no-repeat; background-size: 100% 100%; color: black; font-family: 'Ubuntu', 'Heiti', sans-serif; font-size: 17px; cursor: pointer; margin-bottom: {BUTTON_GAP}px;"
         >
           {@html btnText}
         </button>

@@ -115,13 +115,13 @@
     position: absolute;
     margin: 0;
     text-align: center;
-    font-family: "OldTypeNr", "FZRui", sans-serif;
+    font-family: "OldTypeNr", "Heiti", sans-serif;
     font-size: 20px;
     color: #000000;
   }
 
   .news-body {
-    font-family: "OldTypeNr", "FZRui", sans-serif;
+    font-family: "OldTypeNr", "Heiti", sans-serif;
     position: absolute;
     left: 200px;
     top: 150px;
@@ -130,6 +130,7 @@
     text-align: left;
     font-size: 15px;
     white-space: pre-line;
+    line-height: 2.5ch;
   }
 
   .news-button {
@@ -142,7 +143,7 @@
     background: url("/tno/template/news/event_option_entry.png") no-repeat;
     background-size: 100% 100%;
     color: #000000;
-    font-family: "OldTypeNr", "FZRui", sans-serif;
+    font-family: "OldTypeNr", "Heiti", sans-serif;
     font-size: 16px;
     cursor: pointer;
     transition: 0.2s;

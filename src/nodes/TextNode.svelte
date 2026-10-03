@@ -29,7 +29,7 @@
   .text-container {
     pointer-events: all;
     color: #eee;
-    font-family: "Cubic", sans-serif;
+    font-family: "Cubic", "Heiti", sans-serif;
     word-break: break-word;
     text-shadow: 1px 1px 2px black;
   }

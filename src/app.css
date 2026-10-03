@@ -53,6 +53,11 @@
   src: url(/common/fonts/Ubuntu-M.woff2) format("woff2");
 }
 
+@font-face {
+  font-family: Heiti;
+  src: url(/common/fonts/AdobeHeitiStd-Regular.woff2) format("woff2");
+}
+
 * {
   cursor: url(/template/embark.png), auto;
 }

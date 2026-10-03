@@ -147,7 +147,7 @@
     user-select: none;
     color: #cccccc;
     text-shadow: 1px 1px 2px black;
-    font-family: "Ubuntu", sans-serif;
+    font-family: "Ubuntu", "Heiti", sans-serif;
     width: 100%;
     height: 350px;
   }
@@ -222,7 +222,7 @@
     top: 28px;
     z-index: 5;
     font-size: 15px;
-    font-family: "Ubuntu", sans-serif;
+    font-family: "Ubuntu", "Heiti", sans-serif;
     font-weight: 600;
   }
   .info-group-top p {

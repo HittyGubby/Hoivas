@@ -106,17 +106,18 @@
     position: absolute;
     margin: 0;
     text-align: center;
-    font-family: "OldTypeNr", sans-serif;
+    font-family: "OldTypeNr", "Heiti", sans-serif;
     font-size: 20px;
     color: #000000;
   }
 
   .news-body {
-    font-family: "OldTypeNr", sans-serif;
+    font-family: "OldTypeNr", "Heiti", sans-serif;
     position: absolute;
     left: 40px;
     top: 280px;
     color: #000000;
+    line-height: 2.5ch;
     inline-size: 330px;
     text-align: left;
     font-size: 15px;
@@ -133,7 +134,7 @@
     background: url("/pb/template/news/event_option_entry.png") no-repeat;
     background-size: 100% 100%;
     color: #000000;
-    font-family: "OldTypeNr", sans-serif;
+    font-family: "OldTypeNr", "Heiti", sans-serif;
     font-size: 16px;
     cursor: pointer;
     transition: 0.2s;
